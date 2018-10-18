@@ -25,6 +25,7 @@ body{
     background-color: #fff;
     height: 200px;
     margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
 }
 
 .userCover{
@@ -55,3 +56,57 @@ body{
 .userName{
     opacity: 0.7;
 }
+/* UserProfileCard */
+/* 0000000000000000 */
+.roomListCard{
+    background-color: #fff;
+    height: 382px;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+
+.roomTitle{
+    height: 45px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #bbb8b8;
+    font-size: 18px;
+    padding: 7px;
+}
+
+.roomListDefault ul{
+    list-style: none;
+    overflow-y: scroll;
+    border-bottom: solid 1px #bbb8b8;
+    padding: 0;
+}
+
+.roomListDefault ul li{
+    height: 40px;
+    padding: 5px;
+}
+.roomListDefault ul li:hover{
+    background-color: #d6d3d3;
+}
+.userTitle{
+    height: 45px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #bbb8b8;
+    font-size: 18px;
+    padding: 3px; 
+}
+
+.userRoomList ul{
+    list-style: none;
+    overflow-y: scroll;
+    padding: 0;
+}
+.userRoomList ul li{
+    height: 40px;
+    padding: 5px;
+}
+.userRoomList ul li:hover{
+    background-color: #d6d3d3;
+}
+/*roomListCard*/
