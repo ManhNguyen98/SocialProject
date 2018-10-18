@@ -9,22 +9,56 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="stylesheets/layout_homepage.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
 <body>
   <div class="page-container">
-    <nav class="navbar navbar-inverse">
+    <div style="width:100%;">
+    <div class="navbar navbar-inverse">
                 <div class="container-fluid">
+                <div class="col-xs-4">
                   <div class="navbar-header"><h1>social</h1></div>
+                </div>
+                <div class="col-xs-4">
+                  <form action="/search">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Tìm kiếm">
+                      <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                          <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-xs-4">
                   <ul class="nav navbar-nav navbar-right">
                     <li><a href="#" style="font-size:18px;"><span class="glyphicon glyphicon-log-out"></span> Đăng xuất</a></li></li>
                   </ul>
                 </div>
-    </nav>
-    
+                </div>
+    </div>
+  </div>
     <div class="container">
           <div class="col-md-3" style="background-color:red;height: 800px;">
-            <div style="background-color:rgb(22, 12, 160);height: 225px; color: white;">
-            user image
+            <div class="userProfileCard">
+              <div class="userCover">
+              </div>
+              <div class="userProfileCard-content">
+                <div class="avatatContainer">
+                  <div class="userProfileImage">
+                    <img src="/images/avt.jpg">
+                  </div>
+                  <div class="userProfileName">
+                    <div class="fullname">
+                      Nguyen Thiet Manh
+                    </div>
+                    <span class="userName">
+                      @ManhNguyen98
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div style="background-color:rgb(7, 248, 248);height: 350px;">
               room
