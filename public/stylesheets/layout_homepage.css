@@ -47,12 +47,15 @@ body{
 }
 
 .fullname{
+    cursor: pointer;
     font-weight: bold;
     font-size: 18px;
     line-height: 25px;
     margin: -1px 0 -2px 70px;
 }
-
+.fullname:hover{
+    text-decoration: underline;
+}
 .userName{
     opacity: 0.7;
 }
@@ -75,6 +78,7 @@ body{
 }
 
 .roomListDefault ul{
+    cursor: pointer;
     list-style: none;
     overflow-y: scroll;
     border-bottom: solid 1px #bbb8b8;
@@ -98,6 +102,7 @@ body{
 }
 
 .userRoomList ul{
+    cursor: pointer;
     list-style: none;
     overflow-y: scroll;
     padding: 0;
@@ -110,3 +115,95 @@ body{
     background-color: #d6d3d3;
 }
 /*roomListCard*/
+
+.createRoom{
+    cursor: pointer;
+    height: 60px;
+    background-color: #fff;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+.createRoom p{
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+}
+.createRoom p span{
+    color:rgb(12,77,181);
+    float: right;
+}
+.createRoom:hover{
+    background-color: #d6d3d3;
+}
+/*CreateRoom*/
+.setting{
+    cursor: pointer;
+    height: 60px;
+    background-color: #fff;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+.setting p{
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+}
+.setting p span{
+    color:rgb(12,77,181);
+    float: right;
+}
+.setting:hover{
+    background-color: #d6d3d3;
+}
+/*Setting*/
+.help{
+    cursor: pointer;
+    height: 60px;
+    background-color: #fff;
+    box-shadow: 1px 3px 5px #888888;
+}
+.help p{
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+}
+.help p span{
+    color:rgb(12,77,181);
+    float: right;
+}
+.help:hover{
+    background-color: #d6d3d3;
+}
+/*Help*/
+
+.userStatus{
+    padding: 10px;
+    height: 60px;
+    width: 550px;
+    background-color: #fff;
+    margin-bottom: 6px;
+    box-shadow: 1px 3px 5px #888888;
+}
+
+.userStatusText .statusText{
+    margin-left: 15px;
+    width: 400px;
+    text-align: justify;
+    padding: 10px;
+    border-radius: 5px;
+    border: solid 1px #d6d3d3;
+}
+.btnStatus{
+    display: none;
+    float: right;
+    position: relative;
+    top: 5px;
+    right: 80px;
+}
+.userImage img{
+    float: left;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+/* User Status */
