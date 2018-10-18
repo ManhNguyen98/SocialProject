@@ -1,0 +1,112 @@
+
+body{
+    background-color: rgb(225, 233, 242);
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar { 
+    width: 100%;
+    background-color: rgb(12, 77, 181);
+    border: white;
+    color: #ffffff;
+    border-radius: 0;
+}
+.navbar-header h1{
+    margin-top: 5px;
+}
+.input-group{
+    margin-top: 10px;
+}
+.glyphicon-log-out{
+    font-size: 20px;
+}
+
+.userProfileCard{
+    background-color: #fff;
+    height: 200px;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+
+.userCover{
+    background-color: rgb(12,77,181);
+    height: 100px;
+}
+
+.userProfileImage img{
+    float: left;
+    /* background: url("/images/avt.png") no-repeat; */
+    width: 60px;
+    height: 60px;
+    background-color: #fff;
+    border-radius: 50%;
+    margin: -25px 0 0 8px;
+    padding: 1px;
+    border: rgb(255, 255, 255) solid 2px;
+    
+}
+
+.fullname{
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 25px;
+    margin: -1px 0 -2px 70px;
+}
+
+.userName{
+    opacity: 0.7;
+}
+/* UserProfileCard */
+/* 0000000000000000 */
+.roomListCard{
+    background-color: #fff;
+    height: 382px;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+
+.roomTitle{
+    height: 45px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #bbb8b8;
+    font-size: 18px;
+    padding: 7px;
+}
+
+.roomListDefault ul{
+    list-style: none;
+    overflow-y: scroll;
+    border-bottom: solid 1px #bbb8b8;
+    padding: 0;
+}
+
+.roomListDefault ul li{
+    height: 40px;
+    padding: 5px;
+}
+.roomListDefault ul li:hover{
+    background-color: #d6d3d3;
+}
+.userTitle{
+    height: 45px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #bbb8b8;
+    font-size: 18px;
+    padding: 3px; 
+}
+
+.userRoomList ul{
+    list-style: none;
+    overflow-y: scroll;
+    padding: 0;
+}
+.userRoomList ul li{
+    height: 40px;
+    padding: 5px;
+}
+.userRoomList ul li:hover{
+    background-color: #d6d3d3;
+}
+/*roomListCard*/

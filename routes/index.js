@@ -13,6 +13,10 @@ router.get('/register',function(req,res){
  res.render('index');
 });
 
+router.get('/home',function(req,res){
+  res.render('homepage');
+});
+
 router.post('/register',function(req,res,next){
   var firstname = req.body.firstname;
   var lastname = req.body.lastname;
