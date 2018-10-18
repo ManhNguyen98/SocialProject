@@ -1,0 +1,17 @@
+
+body{
+    background-color: rgb(225, 233, 242);
+}
+
+.navbar{ 
+    background-color: rgb(12, 77, 181);
+    border: white;
+    color: #ffffff;
+    border-radius: 0;
+}
+.navbar-header h1{
+    margin-top: 10px;
+}
+.glyphicon-log-out{
+    font-size: 20px;
+}
