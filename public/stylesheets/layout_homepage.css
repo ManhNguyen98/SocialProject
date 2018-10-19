@@ -207,3 +207,92 @@ body{
     border-radius: 50%;
 }
 /* User Status */
+
+.listFriendOnline{
+    height: 420px;
+    background-color: #fff;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+.listFriendTitle{
+    height: 45px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #bbb8b8;
+    font-size: 18px;
+    padding: 10px; 
+}
+.listFriend{
+    height: 375px;
+    overflow-y: scroll;
+}
+.listFriend ul{
+    padding: 0;
+    cursor: pointer; 
+}
+.listFriend ul div{
+    height: 50px;
+    padding: 5px;
+}
+.listFriend ul div:hover{
+    background-color: #d6d3d3;
+}
+.listFriend ul div img{
+    border-radius: 50px;
+}
+.listFriend ul div span{
+    font-weight: bold;
+}
+.listFriend ul div span:hover{
+    text-decoration: underline;
+}
+.glyphicon-leaf{
+    float: right;
+    color: rgb(12, 77, 181);
+    margin-top:6px;
+}
+/* List Friend Online*/
+.newUser{
+    height: 200px;
+    background-color: #fff;
+    margin-bottom: 8px;
+    box-shadow: 1px 3px 5px #888888;
+}
+.newUserTitle{
+    height: 45px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #bbb8b8;
+    font-size: 18px;
+    padding: 10px; 
+}
+.newUserList{
+    height: 155px;
+    overflow-y: scroll;
+}
+.newUserList ul{
+    padding: 0;
+    cursor: pointer; 
+}
+.newUserList ul div{
+    height: 50px;
+    padding: 5px;
+}
+.newUserList ul div:hover{
+    background-color: #d6d3d3;
+}
+.newUserList ul div img{
+    border-radius: 50px;
+}
+.newUserList ul div span{
+    font-weight: bold;
+}
+.newUserList ul div span:hover{
+    text-decoration: underline;
+}
+.glyphicon-globe{
+    float: right;
+    color: rgb(12, 77, 181);
+    margin-top:6px;
+}
+/* New User*/
