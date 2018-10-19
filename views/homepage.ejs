@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="stylesheets/layout_homepage.css" type="text/css">
+    <link rel="stylesheet" href="stylesheets/popup.css" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script src="homeControl.js"></script>
+    <script src="popupExcute.js"></script>
 </head>
 <body>
   <div class="page-container">
@@ -41,7 +43,7 @@
     </div>
   </div>
     <div class="container">
-          <div class="col-md-3" style="height: 800px;">
+          <div class="col-md-3" style="height: 800px;padding: 0;display: block;">
             <div class="userProfileCard">
               <div class="userCover">
               </div>
@@ -65,10 +67,10 @@
               <div class="roomTitle"><p>Chat Room</p></div>
               <div class="roomListDefault">
                 <ul>
-                  <li>Tư vấn tình cảm</li>
-                  <li>Buôn bán muôn nơi</li>
-                  <li>Công nghệ</li>
-                  <li>Dành cho các mẹ</li>
+                  <li id="tuvantinhcam">Tư vấn tình cảm</li>
+                  <li id="buonban">Buôn bán muôn nơi</li>
+                  <li id="congnghe">Công nghệ</li>
+                  <li id="danhchome">Dành cho các mẹ</li>
                 </ul>
               </div>
               <div class="roomListUser">
@@ -92,9 +94,9 @@
               <p>Hỗ trợ <span class="glyphicon glyphicon-question-sign"></span></p>
             </div>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-6" style="display:block;" id="middle">
             <div>
-            <div class="userStatus">
+            <div class="userStatus"  style="display:block;">
               <div class="userImage">
                 <img src="/images/avt1.jpg">
               </div>
@@ -111,80 +113,128 @@
               
             </div>
             </div>
-            <div class="col-md-8" style="background-color:black;height: 100px;">
-              new feed
-            </div>
-            <div class="col-md-4">
-              <div class="listFriendOnline">
-                <div class="listFriendTitle">Bạn bè</div>
-                <div class="listFriend">
-                  <ul>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Nguyen Thi Hai Yen</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Hoang Ha Giang</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Vuong Thi Nga</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Micky Mouse</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Tom</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Nguyen Hong Nhung</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Nguyen Quynh Giang</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                    <div>
-                      <img src="/images/avt1.jpg">
-                      <span>Do Thi Duong</span>
-                      <i class="glyphicon glyphicon-leaf"></i>
-                    </div>
-                  </ul>
-                </div>
-              </div>
-              <div class="newUser">
-                  <div class="newUserTitle">Người dùng mới</div>
-                  <div class="newUserList">
-                    <ul>
-                    <div>
-                        <img src="/images/avt1.jpg">
-                        <span>Dang Dinh Son</span>
-                        <i class="glyphicon glyphicon-globe"></i>
-                    </div>
-                    <div>
-                        <img src="/images/avt1.jpg">
-                        <span>Hoang The Son</span>
-                        <i class="glyphicon glyphicon-globe"></i>
-                    </div>
-                    <div>
-                        <img src="/images/avt1.jpg">
-                        <span>Nguyen Duy Tung</span>
-                        <i class="glyphicon glyphicon-globe"></i>
-                    </div>
+            <div style="padding:0; display: block;">
+              <div class="newFeed">
+                <div class="newPost">
+                  <div class="userCard">
+                    <img src="/images/avt1.jpg">
+                    <div class="newFeedFullName">
+                    <span> Nguyen Thiet Manh</span>
+                    <div class="dropdown">
+                    <button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button> 
+                    <ul class="dropdown-menu">
+                      <li>Ẩn <i class="glyphicon glyphicon-eye-close"></i></li>
+                      <li>Xóa <i class="glyphicon glyphicon-trash"></i></li>
                     </ul>
+                  </div>
+                    </div>
+                    <span class="timer">
+                      19/10/2018 10:24
+                    </span>
+                  </div>
+                  <div class="userText">
+                    <h3>Test</h3>
+                    <p>Hôm nay</p>
+                  </div>
+                </div>
+                <div class="newPost">
+                    <div class="userCard">
+                      <img src="/images/avt1.jpg">
+                      <div class="newFeedFullName">
+                      <span> Nguyen Thiet Manh</span>
+                      <div class="dropdown">
+                        <button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button> 
+                        <ul class="dropdown-menu">
+                          <li>Ẩn <i class="glyphicon glyphicon-eye-close"></i></li>
+                          <li>Xóa <i class="glyphicon glyphicon-trash"></i></li>
+                        </ul>
+                      </div>
+                      </div>
+                      <span class="timer">
+                        19/10/2018 10:24
+                      </span>
+                    </div>
+                    <div class="userText">
+                      <h3>Test</h3>
+                      <p>Hôm nay</p>
+                    </div>
                   </div>
               </div>
             </div>
+          </div>
+          <div class="col-md-3" style="padding:0;">
+            <div class="fakeImg">
+              
+            </div>
+              <div class="listFriendOnline">
+                  <div class="listFriendTitle">Bạn bè</div>
+                  <div class="listFriend">
+                    <ul>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Nguyen Thi Hai Yen</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Hoang Ha Giang</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Vuong Thi Nga</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Micky Mouse</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Tom</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Nguyen Hong Nhung</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Nguyen Quynh Giang</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                      <div>
+                        <img src="/images/avt1.jpg">
+                        <span>Do Thi Duong</span>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div class="newUser">
+                    <div class="newUserTitle">Người dùng mới</div>
+                    <div class="newUserList">
+                      <ul>
+                      <div>
+                          <img src="/images/avt1.jpg">
+                          <span>Dang Dinh Son</span>
+                          <i class="glyphicon glyphicon-globe"></i>
+                      </div>
+                      <div>
+                          <img src="/images/avt1.jpg">
+                          <span>Hoang The Son</span>
+                          <i class="glyphicon glyphicon-globe"></i>
+                      </div>
+                      <div>
+                          <img src="/images/avt1.jpg">
+                          <span>Nguyen Duy Tung</span>
+                          <i class="glyphicon glyphicon-globe"></i>
+                      </div>
+                      </ul>
+                    </div>
+                </div>
           </div>
   </div>
 </div>
