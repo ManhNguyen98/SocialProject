@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
     $(".userStatusText .statusText").focusin(function(){
         $(".userStatus").css("height","180px");
@@ -11,7 +12,6 @@ $(document).ready(function(){
             $(".btnStatus ").css("display","none");
         }
     });
-    
     
     
 });

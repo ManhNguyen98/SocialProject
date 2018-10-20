@@ -3,7 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index');
@@ -88,7 +87,7 @@ router.post('/login',
   function(req,res){
   req.flash('success','Đăng nhập thành công');
   res.redirect('/');//chuyen huong
-  });
+});
 
 
   
@@ -116,6 +115,5 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-
 
 module.exports = router;

@@ -25,6 +25,6 @@
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
-    "socket.io": "*"
+    "socket.io": "^2.1.1"
   }
 }

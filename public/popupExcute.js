@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
     $("#tuvantinhcam").click(function(){
         var element = "<div class='pop-up-box'><div class='pop-up-head'><div class='pop-up-left'>"+$("#tuvantinhcam").text()+"</div>";
@@ -15,6 +16,8 @@ $(document).ready(function(){
             $(".pop-up-box").hide();
         })
     });
+
+
     $("#buonban").click(function(){
         var element = "<div class='pop-up-box'><div class='pop-up-head'><div class='pop-up-left'>"+$("#buonban").text()+"</div>";
         var element1 = "<div class='pop-up-right'><div id='close'>&#10005</div></div></div><div class='pop-up-mess'></div><div class='pop-up-footer'>";
