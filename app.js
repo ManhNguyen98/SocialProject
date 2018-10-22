@@ -15,9 +15,7 @@ var flash = require('connect-flash');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var User = require('./models/user');
 
 var app = express();
 
@@ -38,7 +36,19 @@ app.use(session({
   saveUninitialized: true,
   resave:true
 }));
-
+//soket io
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
+server.listen(3000);
+  io.on("connection",function(socket){
+    console.log("co nguoi ket noi: " + socket.id);
+    socket.on("disconnect",function(){
+      console.log("byte");
+    });
+    socket.on('tuvantinhcam',function(data){
+      console.log(data);
+    });
+  });
 //Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -75,23 +85,114 @@ app.use(function(req,res,next){
     next();
   });
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+  app.get('/', function(req, res, next) {
+    res.render('index');
+  });
+  
+  app.get('/register',function(req,res){
+   res.render('index');
+  });
+  
+  app.post('/register',function(req,res,next){
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
+    var username = req.body.username;
+    var email = req.body.email;
+    var password = req.body.password;
+    var password2 = req.body.password2;
+    var birthday = req.body.bday;
+    var gender = req.body.gender;
+  
+    //Form Validator
+    req.checkBody('firstname','Họ là bắt buộc').notEmpty();
+    req.checkBody('lastname','Tên là bắt buộc').notEmpty();
+    req.checkBody('username','Tên đăng nhập là bắt buộc').notEmpty();
+    req.checkBody('email','Email là bắt buộc').notEmpty();
+    req.checkBody('email','Email không được chứa ký tự đặc biệt').isEmail();
+    req.checkBody('password','Mật khẩu là bắt buộc').notEmpty();
+    req.checkBody('password2','Mật khẩu không đúng').equals(req.body.password);
+  
+    //Check errors
+    var errors = req.validationErrors();
+    if(errors){
+      res.render('index',{
+        errors: errors
+      });
+    }else{
+      //kiem tra tai khoan va mat khau ton tai
+       User.getUserByUsername(username,function(err,user){
+         if(err) throw err;
+         if(user){
+           res.render('index',{
+             user:user
+           });
+         }else{
+           User.getEmailByEmailName(email,function(err,email){
+             if (err) throw err;
+             if(email){
+               res.render('index',{
+                 email: email
+               });
+           }else{
+      var newUser = new User({
+      firstName : firstname,
+      lastName : lastname,
+      userName : username,
+      passWord : password,
+      email : email
+      })
+  
+      User.createUser(newUser,function(err,user){
+       if (err) throw err;
+        console.log(user);
+      });
+  
+       req.flash('success','Chào mừng bạn đến với Social');
+       res.location('/');
+       res.redirect('/');
+            }
+          });
+         }
+       });
+     }
+   });
+  
+  //Handle Login
+  
+  app.post('/login',
+    passport.authenticate('local', {failureRedirect: '/', failureFlash: 'Tài khoản hoặc mật khẩu không đúng'}),
+    function(req,res){
+    res.render('homepage');
+  });
+  
+  
+    
+  passport.use(new LocalStrategy(function(username,password,done){
+    User.getUserByUsername(username,function(err,user){
+      if (err) throw err;
+      if(!user) {
+        return done(null,false);
+      }
+  
+      User.comparePassword(password,user.passWord,function(err,isMatch){
+        if(err) return done(err);
+        if(isMatch) return done(null,user);
+        else return done(null,false);
+      });
+    });
+  }));
+  
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+  
+  passport.deserializeUser(function(id, done) {
+    User.getUserById(id, function(err, user) {
+      done(err, user);
+    });
+  });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
-
-module.exports = app;
+  app.get("/logout",function(req,res){
+    res.render("index");
+  });
+  

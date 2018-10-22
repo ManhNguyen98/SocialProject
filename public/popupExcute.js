@@ -1,3 +1,4 @@
+var socket = io("http://localhost:3000");
 
 $(document).ready(function(){
     $("#tuvantinhcam").click(function(){
@@ -15,6 +16,7 @@ $(document).ready(function(){
         $(".pop-up-head").click(function(){
             $(".pop-up-box").hide();
         })
+        socket.emit('tuvantinhcam',$("#tuvantinhcam").text());
     });
 
 
