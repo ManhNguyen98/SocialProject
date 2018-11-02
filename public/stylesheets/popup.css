@@ -41,7 +41,7 @@
   .pop-up-mess{
       height: 280px;
       width: 100%;
-      background-color: rgba(200, 207, 207, 0.486);
+      background-color: #ffffff;
       overflow-y: scroll;
   }
   
@@ -156,3 +156,14 @@
   .pop-up-footer button:hover{
       opacity: 1;
   }
+
+.messages{
+    margin-top: 2px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(224, 226, 229);
+}
+.u-messages{
+    background-color: rgb(97, 158, 249);
+    color: #ffffff;
+}

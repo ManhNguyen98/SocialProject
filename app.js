@@ -45,8 +45,14 @@ server.listen(3000);
     socket.on("disconnect",function(){
       console.log("byte");
     });
-    socket.on('tuvantinhcam',function(data){
-      console.log(data);
+    //tao Room
+    socket.on('tuvantinhcam-CreateRoom',function(data){
+      socket.join(data);
+    });
+    //chat
+    socket.on('tuvantinhcam-chatting',function(data){
+      socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
+      socket.emit('your-mess',data);
     });
   });
 //Passport
