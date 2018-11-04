@@ -158,12 +158,60 @@
   }
 
 .messages{
-    margin-top: 2px;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: rgb(224, 226, 229);
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    margin-bottom: 10px;
 }
-.u-messages{
-    background-color: rgb(97, 158, 249);
+
+.messages-container-u{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+}
+
+.u-message-text{
+    border-radius: 20px;
+    margin:5px 10px 0px 0px;
+    border-bottom-right-radius: 0;
+    max-width: 60%;
+    background-color: rgb(101, 171, 252);
     color: #ffffff;
+    padding: 5px;
+}
+.user-avt img{
+    border-radius: 50%;
+}
+
+.messages-container-o{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.o-message-text{
+    border-radius: 20px;
+    margin:5px 0px 0px 10px;
+    border-bottom-left-radius: 0;
+    max-width: 60%;
+    background-color: rgb(189, 190, 192);
+    color: #000000;
+    padding: 5px;
+}
+.other-avt img{
+    border-radius: 50%;
+}
+
+.message-footer{
+    display: flex;
+    color: #657786;
+    font-size: 11px;
+}
+.u-footer{
+    flex-direction: row-reverse;
+    margin: 0px 38px;
+}
+.o-footer{
+    flex-direction: row;
+    margin-left: 38px;
 }
