@@ -1,5 +1,6 @@
   
   .pop-up-box{
+      display: none;
       position: fixed;
       bottom: 0px;
       height: 350px;

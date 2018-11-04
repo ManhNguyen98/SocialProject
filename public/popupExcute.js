@@ -23,55 +23,98 @@ socket.on("your-mess",function(data){
     var message = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + data +"</div></div><div class = 'message-footer u-footer'>"+time+"</div></li>"
     $(".pop-up-mess").append(message);
 });
+//pop-up function
+//remove array element
+Array.remove = function(array, from, to) {
+    var rest = array.slice((to || from) + 1 || array.length);
+    array.length = from < 0 ? array.length + from : from;
+    return array.push.apply(array, rest);
+};
 
+//totals of pop-up
+var total_popups = 0;
+//array of popup ids
+var popups = [];
+
+//function close pop up
+function close_popup(id){
+    for (var i = 0; i < popups.length; i++){
+            if ( id.id == popups[i]){
+                Array.remove(popups,i);
+                document.getElementById(id.id).style.display = "none";
+                calculate_popups();
+                return;
+            }
+        }
+};
+
+//display pop-up
+function display_popups(){
+    var i = 0;
+    for (i;i<total_popups;i++){
+        if ( popups[i] != undefined){
+            var element = document.getElementById(popups[i]);
+            element.style.display = "block";
+        }
+    }
+
+    for (var j = i; j < popups.length; j++){
+        var element = document.getElementById(popups[j]);
+        element.style.display = "none";
+    }
+};
+
+//create markup for new popup and add id to popup array
+function register_popup(id, name){
+    for (var i = 0; i<popups.length; i++){
+        if (id == popups[i]){
+            Array.remove(popups,i);
+            popups.unshift(id);
+            calculate_popups();
+            return;
+        }
+    }
+    var element = "<div class='pop-up-box' id = '" + id + "'><div class='pop-up-head'><div class='pop-up-left'>"+name+"</div>";
+    var element1 = "<div class='pop-up-right' onclick='close_popup("+id+")'><div id='close'>&#10005</div></div></div><div class='pop-up-mess'></div><div class='pop-up-footer'>";
+    var element2 ="<input name='message' id='mess' placeholder='Nhập tin nhắn...'><button class='btnSend btnSend-tuvantinhcam'>SEND</button></div></div>";
+    document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
+    $("#mess").focus();
+    popups.unshift(id);
+    calculate_popups();
+};
+
+//calculate totals_popup
+function calculate_popups(){
+    var width = $("#middle").innerWidth();
+    total_popups = parseInt(width/400);
+    display_popups();
+}
 $(document).ready(function(){
     $("#tuvantinhcam").click(function(){
-        var element = "<div class='pop-up-box'><div class='pop-up-head'><div class='pop-up-left'>"+$("#tuvantinhcam").text()+"</div>";
-        var element1 = "<div class='pop-up-right'><div id='close'>&#10005</div></div></div><div class='pop-up-mess'></div><div class='pop-up-footer'>";
-        var element2 ="<input name='message' id='mess' placeholder='Nhập tin nhắn...'><button class='btnSend btnSend-tuvantinhcam'>SEND</button></div></div>";
-        if ($(".pop-up-box").length){
-            $(".pop-up-box").hide();
+        if($("#tuvantinhcampopup")[0]){
+            $("#tuvantinhcampopup").removeAttr('id');
         }
-        $("#middle").append(element + element1 + element2);
-        $("#close").click(function(){
-            $(".pop-up-box").hide();
-        })
-        $("#mess").focus();
-        $(".pop-up-head").click(function(){
-            $(".pop-up-box").hide();
-        })
-
+        register_popup('tuvantinhcampopup',$("#tuvantinhcam").text());
+        if ("#middle")
         socket.emit('tuvantinhcam-CreateRoom','tuvantinhcam');
 
-        $(".btnSend-tuvantinhcam").click(function(){
-            socket.emit('tuvantinhcam-chatting',$("#mess").val());
-            $("#mess").val("");
+        $("#tuvantinhcampopup .btnSend-tuvantinhcam").click(function(){
+            if($("#tuvantinhcampopup #mess").val()!=null && $("#tuvantinhcampopup #mess").val() !=""){
+                socket.emit('tuvantinhcam-chatting',$("#tuvantinhcampopup #mess").val());
+                $("#tuvantinhcampopup #mess").val("");
+            }
         })
 
-        $("#mess").keyup(function(e){
-            if((event.keyCode === 13 ) && ($("#mess").val()!=null) && ($("#mess").val()!="")){
-                $(".btnSend-tuvantinhcam").click();
+        $("#tuvantinhcampopup #mess").keyup(function(e){
+            if((event.keyCode === 13 ) && ($("#tuvantinhcampopup #mess").val()!=null) && ($("#tuvantinhcampopup #mess").val()!="")){
+                $("#tuvantinhcampopup .btnSend-tuvantinhcam").click();
             }
         });
-
     });
 
 
     $("#buonban").click(function(){
-        var element = "<div class='pop-up-box'><div class='pop-up-head'><div class='pop-up-left'>"+$("#buonban").text()+"</div>";
-        var element1 = "<div class='pop-up-right'><div id='close'>&#10005</div></div></div><div class='pop-up-mess'></div><div class='pop-up-footer'>";
-        var element2 ="<input name='message' id='mess' placeholder='Nhập tin nhắn...'><button class='btnSend btnSend-buonban'>SEND</button></div></div>";
-        if ($(".pop-up-box").length){
-            $(".pop-up-box").hide();
-        }
-        $("#middle").append(element + element1 + element2);
-        $("#close").click(function(){
-            $(".pop-up-box").hide();
-        })
-    
-        $(".pop-up-head").click(function(){
-            $(".pop-up-box").hide();
-        })
+        register_popup("buonbanpopup",$("#buonban").text());
     });
     $("#congnghe").click(function(){
         var element = "<div class='pop-up-box'><div class='pop-up-head'><div class='pop-up-left'>"+$("#congnghe").text()+"</div>";
