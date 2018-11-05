@@ -40,21 +40,7 @@ app.use(session({
 var server = require("http").Server(app);
 var io = require("socket.io")(server);
 server.listen(3000);
-  io.on("connection",function(socket){
-    console.log("co nguoi ket noi: " + socket.id);
-    socket.on("disconnect",function(){
-      console.log("byte");
-    });
-    //tao Room
-    socket.on('tuvantinhcam-CreateRoom',function(data){
-      socket.join(data);
-    });
-    //chat
-    socket.on('tuvantinhcam-chatting',function(data){
-      socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
-      socket.emit('your-mess',data);
-    });
-  });
+var login = io.of('/login');
 //Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -164,14 +150,31 @@ app.use(function(req,res,next){
    });
   
   //Handle Login
-  
   app.post('/login',
     passport.authenticate('local', {failureRedirect: '/', failureFlash: 'Tài khoản hoặc mật khẩu không đúng'}),
     function(req,res){
     res.render('homepage');
+    // login.on('connection',function(socket){
+    //   console.log("Someone connected");
+    //   socket.emit('hi',us);
+    // });
   });
   
-  
+  io.on("connection",function(socket){
+    console.log("co nguoi ket noi: " + socket.id);
+    socket.on("disconnect",function(){
+    console.log("byte");
+   });
+    //tao Room
+   socket.on('tuvantinhcam-CreateRoom',function(data){
+    socket.join(data);
+   });
+   //chat
+   socket.on('tuvantinhcam-chatting',function(data){
+    socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
+    socket.emit('your-mess',data);
+   });
+  });
     
   passport.use(new LocalStrategy(function(username,password,done){
     User.getUserByUsername(username,function(err,user){
