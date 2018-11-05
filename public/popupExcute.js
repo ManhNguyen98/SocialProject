@@ -48,6 +48,20 @@ function close_popup(id){
         }
 };
 
+function hide_popup(){
+        $(".pop-up-mess").hide();
+        $(".pop-up-footer").hide();
+        $(".pop-up-head").attr('id','pop-up-hide');
+        $(".pop-up-head").attr('onclick','show_popup()');
+        calculate_popups();
+        return;
+}
+function show_popup(){
+    $(".pop-up-head").removeAttr('id');
+    $(".pop-up-mess").show();
+    $(".pop-up-footer").show();
+    $(".pop-up-head").attr('onclick','hide_popup()');
+}
 //display pop-up
 function display_popups(){
     var i = 0;
@@ -74,7 +88,7 @@ function register_popup(id, name){
             return;
         }
     }
-    var element = "<div class='pop-up-box' id = '" + id + "'><div class='pop-up-head'><div class='pop-up-left'>"+name+"</div>";
+    var element = "<div class='pop-up-box' id = '" + id + "'><div class='pop-up-head' onclick='hide_popup()'><div class='pop-up-left'>"+name+"</div>";
     var element1 = "<div class='pop-up-right' onclick='close_popup("+id+")'><div id='close'>&#10005</div></div></div><div class='pop-up-mess'></div><div class='pop-up-footer'>";
     var element2 ="<input name='message' id='mess' placeholder='Nhập tin nhắn...'><button class='btnSend btnSend-tuvantinhcam'>SEND</button></div></div>";
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
@@ -91,11 +105,13 @@ function calculate_popups(){
 }
 $(document).ready(function(){
     $("#tuvantinhcam").click(function(){
+        
         if($("#tuvantinhcampopup")[0]){
             $("#tuvantinhcampopup").removeAttr('id');
         }
+
         register_popup('tuvantinhcampopup',$("#tuvantinhcam").text());
-        if ("#middle")
+
         socket.emit('tuvantinhcam-CreateRoom','tuvantinhcam');
 
         $("#tuvantinhcampopup .btnSend-tuvantinhcam").click(function(){
@@ -109,6 +125,20 @@ $(document).ready(function(){
             if((event.keyCode === 13 ) && ($("#tuvantinhcampopup #mess").val()!=null) && ($("#tuvantinhcampopup #mess").val()!="")){
                 $("#tuvantinhcampopup .btnSend-tuvantinhcam").click();
             }
+        });
+
+        $(".userStatus").click(function(event){
+            if( $(event.target).closest('.statusText').length == 0 ){
+                $(".userStatus").css("height","60px");
+                $(".userStatusText .statusText").css("padding","10px");
+                $(".btnStatus ").css("display","none");
+            }
+        });
+
+        $(".userStatusText .statusText").focusin(function(){
+            $(".userStatus").css("height","180px");
+            $(".userStatusText .statusText").css("padding-bottom","80px");
+            $(".btnStatus ").css("display","flex");
         });
     });
 

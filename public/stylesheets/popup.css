@@ -216,3 +216,11 @@
     flex-direction: row;
     margin-left: 38px;
 }
+
+#pop-up-hide{
+    position: absolute;
+    background-color: rgb(226, 225, 225);
+    color: #000000;
+    width: 50%;
+    bottom: 0;
+}

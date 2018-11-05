@@ -191,7 +191,7 @@ body{
 
 .userStatusText .statusText{
     margin-left: 15px;
-    width: 400px;
+    width:80%;
     text-align: justify;
     padding: 10px;
     border-radius: 5px;
