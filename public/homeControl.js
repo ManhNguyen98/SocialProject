@@ -1,7 +1,12 @@
-// var socket = io('http://localhost:3000/login');
-// socket.on('hi',function(data){
-//     alert(data);
-// });
+var user;
+
+socket.on('your-name',function(data){
+    user = data;
+    var name = data.firstName +" "+ data.lastName;
+    var username = data.userName;
+    $(".fullname").html("<span>"+name+"</span>");
+    $(".userName").html("@"+username);
+});
 function getCurrentTime(){
     var d = new Date();
     var day = d.getDate();
@@ -16,11 +21,14 @@ function getCurrentTime(){
     return time;
 }
 function postStatus(){
+    var name = user.firstName + " " + user.lastName;
     if ($(".statusText").val()!= null && $(".statusText").val()!=""){
-    var element = "<div class='newPost'><div class='userCard'><img src='/images/avt1.jpg'><div class='newFeedFullName'><span> Nguyen Thiet Manh</span>";
+    var element = "<div class='newPost'><div class='userCard'><img src='/images/avt1.jpg'><div class='newFeedFullName'><span>"+name+"</span>";
     var element = element + "<div class='dropdown'><button data-toggle='dropdown'><i class='glyphicon glyphicon-option-vertical'></i></button><ul class='dropdown-menu'><li>Ẩn <i class='glyphicon glyphicon-eye-close'></i></li><li>Xóa <i class='glyphicon glyphicon-trash'></i></li></ul></div></div>";
     var element = element + "<span class='timer'>"+getCurrentTime()+"</span></div><div class='userText'><p>"+$(".statusText").val()+"</p></div></div>";
     $(".newFeed").prepend(element);
+    //luu status vao csdl
+    socket.emit("save-status",user.userName,$(".statusText").val());
     $(".statusText").val("");
 }
 }

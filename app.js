@@ -16,8 +16,11 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var User = require('./models/user');
-
+var tenuser = new User() ;
+var oldStatus = "";
 var app = express();
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,7 +43,6 @@ app.use(session({
 var server = require("http").Server(app);
 var io = require("socket.io")(server);
 server.listen(3000);
-var login = io.of('/login');
 //Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -154,27 +156,8 @@ app.use(function(req,res,next){
     passport.authenticate('local', {failureRedirect: '/', failureFlash: 'Tài khoản hoặc mật khẩu không đúng'}),
     function(req,res){
     res.render('homepage');
-    // login.on('connection',function(socket){
-    //   console.log("Someone connected");
-    //   socket.emit('hi',us);
-    // });
   });
   
-  io.on("connection",function(socket){
-    console.log("co nguoi ket noi: " + socket.id);
-    socket.on("disconnect",function(){
-    console.log("byte");
-   });
-    //tao Room
-   socket.on('tuvantinhcam-CreateRoom',function(data){
-    socket.join(data);
-   });
-   //chat
-   socket.on('tuvantinhcam-chatting',function(data){
-    socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
-    socket.emit('your-mess',data);
-   });
-  });
     
   passport.use(new LocalStrategy(function(username,password,done){
     User.getUserByUsername(username,function(err,user){
@@ -185,7 +168,10 @@ app.use(function(req,res,next){
   
       User.comparePassword(password,user.passWord,function(err,isMatch){
         if(err) return done(err);
-        if(isMatch) return done(null,user);
+        if(isMatch){
+        tenuser = user;
+        return done(null,user);
+        } 
         else return done(null,false);
       });
     });
@@ -199,6 +185,45 @@ app.use(function(req,res,next){
     User.getUserById(id, function(err, user) {
       done(err, user);
     });
+  });
+
+  io.on("connection",function(socket){
+    console.log("co nguoi ket noi: " + socket.id);
+    console.log(tenuser);
+    socket.emit('your-name',tenuser);
+    socket.on("disconnect",function(){
+    console.log("byte");
+   });
+    //tao Room
+   socket.on('tuvantinhcam-CreateRoom',function(data){
+    socket.join(data);
+   });
+   //chat
+   socket.on('tuvantinhcam-chatting',function(data){
+    socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
+    socket.emit('your-mess',data);
+   });
+
+   //luu status
+   socket.on("save-status",function(name,data){
+     console.log(name);
+     console.log(oldStatus);
+     MongoClient.connect(url,function(err,db){
+        if (err) throw err;
+        var dbo = db.db("social");
+        var newVal = { $set: {status: oldStatus + data + "```"} };
+        dbo.collection("users").updateOne({userName:name},newVal,function(err){
+          if (err) throw err;
+        });
+        dbo.collection("users").findOne({userName:name},function(err,res){
+          if (err) throw err;
+          oldStatus += res.status;
+        });
+        db.close();
+      });
+      console.log(oldStatus);
+      oldStatus = "";
+   });
   });
 
   app.get("/logout",function(req,res){
