@@ -17,7 +17,7 @@ var mongoose = require('mongoose');
 var db = mongoose.connection;
 var User = require('./models/user');
 var tenuser = new User() ;
-var oldStatus = "";
+var oldStatus;
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -133,7 +133,10 @@ app.use(function(req,res,next){
       lastName : lastname,
       userName : username,
       passWord : password,
-      email : email
+      email : email,
+      status: "",
+      friends:"",
+      room:""
       })
   
       User.createUser(newUser,function(err,user){
@@ -190,7 +193,17 @@ app.use(function(req,res,next){
   io.on("connection",function(socket){
     console.log("co nguoi ket noi: " + socket.id);
     console.log(tenuser);
+    MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      dbo.collection("users").findOne({userName:tenuser.userName},function(err,res){
+        if (err) throw err;
+        oldStatus = res.status;
+      });
+      db.close();
+    });
     socket.emit('your-name',tenuser);
+    socket.emit('your-status',oldStatus);
     socket.on("disconnect",function(){
     console.log("byte");
    });
@@ -205,24 +218,20 @@ app.use(function(req,res,next){
    });
 
    //luu status
-   socket.on("save-status",function(name,data){
-     console.log(name);
-     console.log(oldStatus);
+   socket.on("save-status",function(user,data){
      MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      var newVal = { $set: {status: oldStatus + data + "```" } };
+      dbo.collection("users").updateOne({userName:user.userName},newVal,function(err){
         if (err) throw err;
-        var dbo = db.db("social");
-        var newVal = { $set: {status: oldStatus + data + "```"} };
-        dbo.collection("users").updateOne({userName:name},newVal,function(err){
-          if (err) throw err;
-        });
-        dbo.collection("users").findOne({userName:name},function(err,res){
-          if (err) throw err;
-          oldStatus += res.status;
-        });
-        db.close();
       });
-      console.log(oldStatus);
-      oldStatus = "";
+      dbo.collection("users").findOne({userName:user.userName},function(err,res){
+        if (err) throw err;
+        oldStatus = res.status;
+      });
+      db.close();
+      });
    });
   });
 

@@ -22,6 +22,15 @@ var UserSchema = mongoose.Schema({
     },
     email:{
         type: String,
+    },
+    status:{
+        type: String,
+    },
+    friends:{
+        type:String,
+    },
+    room:{
+        type: String,
     }
 });
 
