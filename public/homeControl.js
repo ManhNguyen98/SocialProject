@@ -29,8 +29,9 @@ function postStatus(){
     var element = element + "<div class='dropdown'><button data-toggle='dropdown'><i class='glyphicon glyphicon-option-vertical'></i></button><ul class='dropdown-menu'><li>Ẩn <i class='glyphicon glyphicon-eye-close'></i></li><li>Xóa <i class='glyphicon glyphicon-trash'></i></li></ul></div></div>";
     var element = element + "<span class='timer'>"+timer+"</span></div><div class='userText'><p>"+$(".statusText").val()+"</p></div></div>";
     $(".newFeed").prepend(element);
+    var status = timer + "``" + $(".statusText").val();
     //luu status vao csdl
-    socket.emit("save-status",user,$(".statusText").val());
+    socket.emit("save-status",user,status);
     $(".statusText").val("");
 }
 }
