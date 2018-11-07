@@ -345,7 +345,6 @@ body{
 }
 .dropdown-menu li:hover{
     background-color: #d6d3d3;
-    text-decoration: underline;
 }
 .glyphicon-eye-close{
     float: right;

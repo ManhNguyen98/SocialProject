@@ -199,11 +199,11 @@ app.use(function(req,res,next){
       dbo.collection("users").findOne({userName:tenuser.userName},function(err,res){
         if (err) throw err;
         oldStatus = res.status;
+        socket.emit('your-status',res.status);
       });
       db.close();
     });
     socket.emit('your-name',tenuser);
-    socket.emit('your-status',oldStatus);
     socket.on("disconnect",function(){
     console.log("byte");
    });
