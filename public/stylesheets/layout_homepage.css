@@ -351,6 +351,11 @@ body{
     margin-right: 10px;
     font-size: 16px;
 }
+.glyphicon-eye-open{
+    float: right;
+    margin-right: 10px;
+    font-size: 16px;
+}
 .glyphicon-trash{
     float: right;
     margin-right: 10px;
