@@ -16,8 +16,10 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var User = require('./models/user');
+var Room = require('./models/room');
 var tenuser = new User() ;
 var oldStatus;
+var room1oldmess;
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -201,6 +203,10 @@ app.use(function(req,res,next){
         oldStatus = res.status;
         socket.emit('your-status',res.status);
       });
+      dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
+        if (err) throw err;
+        room1oldmess = res.chat;
+      });
       db.close();
     });
     socket.emit('your-name',tenuser);
@@ -210,11 +216,40 @@ app.use(function(req,res,next){
     //tao Room
    socket.on('tuvantinhcam-CreateRoom',function(data){
     socket.join(data);
+    //Load tin nhan cu len
+    MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      
+      dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
+        if (err) throw err;
+        room1oldmess = res.chat;
+        socket.emit("old-mess-room1",res.chat);
+        //console.log(res.chat);
+      });
+      db.close();
+    });
    });
    //chat
    socket.on('tuvantinhcam-chatting',function(data){
     socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
     socket.emit('your-mess',data);
+    //luu tin nhan vao db
+    MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      var newMess = { $set: {chat: room1oldmess + data + "```"}};
+
+      dbo.collection("rooms").updateOne({roomName:'chuyentinhcam'},newMess,function(err){
+        if (err) throw err;
+      });
+
+      dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
+        if (err) throw err;
+        room1oldmess = res.chat;
+      });
+      db.close();
+    });
    });
 
    //luu status
@@ -233,6 +268,7 @@ app.use(function(req,res,next){
       db.close();
       });
    });
+
   });
 
   app.get("/logout",function(req,res){

@@ -1,9 +1,29 @@
 var socket = io("http://localhost:3000");
+var user;
+
+socket.on('your-name',function(data){
+    user = data;
+});
+socket.on("old-mess-room1",function(data){
+    var mess = data.split("```");
+    for (var i =0;i<mess.length -1;i++){
+    var submess = mess[i].split("``");
+    var username = submess[0];
+    var message = submess[1];
+    if (username != user.userName)
+    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><img src = '/images/avt1.jpg'></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'></div></li>";
+    else
+    var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + message +"</div></div><div class = 'message-footer u-footer'></div></li>";
+    $(".pop-up-mess").append(element);
+    };
+});
 
 socket.on("tuvantinhcam-chat",function(data){
     var time = getCurrentTime();
-    var message = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><img src = '/images/avt1.jpg'></div><div class = 'o-message-text'>" + data +"</div></div><div class = 'message-footer o-footer'>"+time+"</div></li>"
-    $(".pop-up-mess").append(message);
+    var mess = data.split("``");
+    var message = mess[1];
+    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><img src = '/images/avt1.jpg'></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'>"+time+"</div></li>"
+    $(".pop-up-mess").append(element);
 });
 function getCurrentTime(){
     var d = new Date();
@@ -20,8 +40,10 @@ function getCurrentTime(){
 }
 socket.on("your-mess",function(data){
     var time = getCurrentTime();
-    var message = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + data +"</div></div><div class = 'message-footer u-footer'>"+time+"</div></li>"
-    $(".pop-up-mess").append(message);
+    var mess = data.split("``");
+    var message = mess[1];
+    var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + message +"</div></div><div class = 'message-footer u-footer'>"+time+"</div></li>"
+    $(".pop-up-mess").append(element);
 });
 //pop-up function
 //remove array element
@@ -116,7 +138,8 @@ $(document).ready(function(){
 
         $("#tuvantinhcampopup .btnSend-tuvantinhcam").click(function(){
             if($("#tuvantinhcampopup #mess").val()!=null && $("#tuvantinhcampopup #mess").val() !=""){
-                socket.emit('tuvantinhcam-chatting',$("#tuvantinhcampopup #mess").val());
+                var message=user.userName + "``" + $("#tuvantinhcampopup #mess").val();
+                socket.emit('tuvantinhcam-chatting',message);
                 $("#tuvantinhcampopup #mess").val("");
             }
         })
