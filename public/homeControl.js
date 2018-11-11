@@ -7,6 +7,14 @@ socket.on('your-name',function(data){
     $(".fullname").html("<span>"+name+"</span>");
     $(".userName").html("@"+username);
 });
+socket.on('user-online',function(data){
+    $(".newUserList ul").html("");
+    data.forEach(i => {
+        var onlinename = i.firstName + " " +i.lastName;
+        var element = "<div><img src='/images/avt1.jpg'><span>"+onlinename+"</span><i class='glyphicon glyphicon-globe'></i></div>";
+        $(".newUserList ul").append(element);
+    });
+});
 function load_status(){
 socket.on('your-status',function(status){
     var name = user.firstName + " " + user.lastName;

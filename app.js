@@ -23,7 +23,7 @@ var room1oldmess;
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
-
+var listUserOnline = [];
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -195,6 +195,8 @@ app.use(function(req,res,next){
   io.on("connection",function(socket){
     console.log("co nguoi ket noi: " + socket.id);
     console.log(tenuser);
+    listUserOnline.push(tenuser);
+    socket.user = tenuser;
     MongoClient.connect(url,function(err,db){
       if (err) throw err;
       var dbo = db.db("social");
@@ -209,9 +211,14 @@ app.use(function(req,res,next){
       });
       db.close();
     });
+    //GetNameByUserName
+    
     socket.emit('your-name',tenuser);
+    io.sockets.emit('user-online',listUserOnline);
     socket.on("disconnect",function(){
     console.log("byte");
+    listUserOnline.splice(listUserOnline.indexOf(socket.user),1);
+    socket.broadcast.emit('user-online',listUserOnline);
    });
     //tao Room
    socket.on('tuvantinhcam-CreateRoom',function(data){

@@ -4,26 +4,31 @@ var user;
 socket.on('your-name',function(data){
     user = data;
 });
+
 socket.on("old-mess-room1",function(data){
     var mess = data.split("```");
     for (var i =0;i<mess.length -1;i++){
     var submess = mess[i].split("``");
     var username = submess[0];
     var message = submess[1];
-    if (username != user.userName)
-    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><img src = '/images/avt1.jpg'></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'></div></li>";
+    if (username != user.userName){
+        var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+username+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'></div></li>";
+    }
     else
     var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + message +"</div></div><div class = 'message-footer u-footer'></div></li>";
     $(".pop-up-mess").append(element);
+    $('[data-toggle="tooltip"]').tooltip();  
     };
 });
 
 socket.on("tuvantinhcam-chat",function(data){
     var time = getCurrentTime();
     var mess = data.split("``");
+    var username = mess[0];
     var message = mess[1];
-    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><img src = '/images/avt1.jpg'></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'>"+time+"</div></li>"
+    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+username+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'>"+time+"</div></li>"
     $(".pop-up-mess").append(element);
+    $('[data-toggle="tooltip"]').tooltip();  
 });
 function getCurrentTime(){
     var d = new Date();
@@ -127,7 +132,6 @@ function calculate_popups(){
 }
 $(document).ready(function(){
     $("#tuvantinhcam").click(function(){
-        
         if($("#tuvantinhcampopup")[0]){
             $("#tuvantinhcampopup").removeAttr('id');
         }
