@@ -302,6 +302,13 @@ body{
     float: right;
     color: rgb(12, 77, 181);
     margin-top:6px;
+    font-size: 18px;
+}
+.glyphicon-plus{
+    float: right;
+    font-size: 18px;
+    color: rgb(12, 77, 181);
+    margin-top:6px;
 }
 /* New User*/
 

@@ -136,9 +136,31 @@ app.use(function(req,res,next){
       userName : username,
       passWord : password,
       email : email,
-      status: "",
-      friends:"",
-      room:""
+      status: [
+        {
+            "time": "",
+            "text": ""
+        }
+    ],
+      friends: [ 
+        {
+            "user" : "",
+            "message" : ""
+        }
+    ],
+      room:[ 
+        {
+            "roomName" : "",
+            "isCreated" : "",
+            "message" : [ 
+                {
+                    "user" : "",
+                    "message" : "",
+                    "time" : ""
+                }
+            ]
+        }
+    ]
       })
   
       User.createUser(newUser,function(err,user){
@@ -163,7 +185,6 @@ app.use(function(req,res,next){
     res.render('homepage');
   });
   
-    
   passport.use(new LocalStrategy(function(username,password,done){
     User.getUserByUsername(username,function(err,user){
       if (err) throw err;
@@ -260,22 +281,59 @@ app.use(function(req,res,next){
    });
 
    //luu status
-   socket.on("save-status",function(user,data){
+   socket.on("save-status",function(user,time,text){
      MongoClient.connect(url,function(err,db){
       if (err) throw err;
       var dbo = db.db("social");
-      var newVal = { $set: {status: oldStatus + data + "```" } };
+      var newObj = {
+        "time" : time,
+        "text" : text
+    }
+      var newVal = { $push: {status: newObj} };
       dbo.collection("users").updateOne({userName:user.userName},newVal,function(err){
         if (err) throw err;
       });
       dbo.collection("users").findOne({userName:user.userName},function(err,res){
         if (err) throw err;
+        console.log(res);
         oldStatus = res.status;
       });
       db.close();
       });
    });
 
+   //them ban
+   socket.on('addfriend',function(data){
+     if (data != socket.user.userName){
+      console.log(data);
+       //khong tu ket ban voi chinh minh
+     MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      var newfriend = {
+          "user": data,
+          "message": ""
+        }
+      var newVal = { $push: {friends: newfriend} };
+      dbo.collection("users").findOne({userName:data},function(err,res){
+        if (err) throw(err);
+        console.log(res);
+      });
+      dbo.collection("users").updateOne({userName:socket.user.userName},newVal,function(err){
+         if (err) throw err;
+         //them ban vao db cua minh
+      });
+      newfriend = {
+        "user": socket.user.userName,
+        "message": ""
+      }
+      newVal = { $push: {friends: newfriend}};
+      
+      db.close();
+     });
+    }
+   });
+   ///TODO: code here
   });
 
   app.get("/logout",function(req,res){

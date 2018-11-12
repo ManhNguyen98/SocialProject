@@ -11,21 +11,30 @@ socket.on('user-online',function(data){
     $(".newUserList ul").html("");
     data.forEach(i => {
         var onlinename = i.firstName + " " +i.lastName;
-        var element = "<div><img src='/images/avt1.jpg'><span>"+onlinename+"</span><i class='glyphicon glyphicon-globe'></i></div>";
+        var element = "<div><img src='/images/avt1.jpg'>  <span>"+onlinename+"</span><i class='glyphicon glyphicon-globe' onmouseover='changeImg1(this,"+i.userName+")' onmouseout='changeImg2(this)'></i></div>";
         $(".newUserList ul").append(element);
     });
 });
+function changeImg1(x,data){
+        x.className = 'glyphicon glyphicon-plus';
+        x.addEventListener('click',addFriend(data));
+}
+function changeImg2(x){
+    x.className = "glyphicon glyphicon-globe";
+}
+function addFriend(data){
+    socket.emit('addfriend',data);
+}
 function load_status(){
 socket.on('your-status',function(status){
     var name = user.firstName + " " + user.lastName;
-    var userstatus = status.split("```");
-    for (var i = 0;i<userstatus.length-1;i++){
-        var info = userstatus[i].split("``");
-        var time = info[0];
-        var text = info[1];
+    for (i=0;i<status.length;i++){
+        var time = status[i].time;
+        var text = status[i].text;
         var element = "<div class='newPost'><div class='userCard'><img src='/images/avt1.jpg'><div class='newFeedFullName'><span>"+name+"</span>";
         var element = element + "<div class='dropdown'><button data-toggle='dropdown'><i class='glyphicon glyphicon-option-vertical'></i></button><ul class='dropdown-menu'><li id ='"+i+"' onclick='statusHide("+user.userName+i+","+i+")'>Ẩn <i class='glyphicon glyphicon-eye-close'></i></li><li>Xóa <i class='glyphicon glyphicon-trash'></i></li></ul></div></div>";
         var element = element + "<span class='timer'>"+time+"</span></div><div class='userText'><br><p id ='"+user.userName+i+"'>"+text+"</p></div></div>";
+        if (time != "")
         $(".newFeed").prepend(element);
     }
 })
@@ -62,9 +71,8 @@ function createId(){
 function postStatus(){
     var timer = getCurrentTime();
     if ($(".statusText").val()!= null && $(".statusText").val()!=""){
-    var status = timer + "``" + $(".statusText").val();
     //luu status vao csdl
-    socket.emit("save-status",user,status);
+    socket.emit("save-status",user,timer,$(".statusText").val());
     location.reload();
 }
 }

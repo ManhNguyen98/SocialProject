@@ -23,15 +23,31 @@ var UserSchema = mongoose.Schema({
     email:{
         type: String,
     },
-    status:{
-        type: String,
-    },
-    friends:{
-        type:String,
-    },
-    room:{
-        type: String,
-    }
+    status:[
+        {
+            time: String,
+            text: String
+        }
+    ],
+    friends:[
+        {
+            user: String,
+            message: String
+        }
+    ],
+    room:[ 
+        {
+            roomName :String,
+            isCreated : String,
+            message : [ 
+                {
+                    user : String,
+                    message : String,
+                    time : String
+                }
+            ]
+        }
+    ]
 });
 
 var User = module.exports = mongoose.model('User', UserSchema);
