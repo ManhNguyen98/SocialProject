@@ -24,6 +24,7 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 var listUserOnline = [];
+var friended;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -233,7 +234,8 @@ app.use(function(req,res,next){
       db.close();
     });
     //GetNameByUserName
-    
+    //TODO: code here
+    ///////////////////
     socket.emit('your-name',tenuser);
     io.sockets.emit('user-online',listUserOnline);
     socket.on("disconnect",function(){
@@ -301,38 +303,60 @@ app.use(function(req,res,next){
       db.close();
       });
    });
-
+   function isFriend(user1,user2){
+     MongoClient.connect(url,function(err,db){
+      if (err) console.log(err);
+      var dbo = db.db("social");
+      dbo.collection("users").findOne({userName: user2},function(err,res){
+       if (err) console.log(err);
+       if(res)
+       for(i=1;i<res.friends.length;i++){
+         if (res.friends[i].userName == user1)
+         friended = 1;
+         break;
+       }
+      });
+      db.close();
+    });    
+  }
    //them ban
    socket.on('addfriend',function(data){
      if (data != socket.user.userName){
-      console.log(data);
+       friended = 0;
+      isFriend(data,socket.user.userName);
+      console.log(friended);
        //khong tu ket ban voi chinh minh
-     MongoClient.connect(url,function(err,db){
-      if (err) throw err;
-      var dbo = db.db("social");
-      var newfriend = {
-          "user": data,
-          "message": ""
-        }
-      var newVal = { $push: {friends: newfriend} };
-      dbo.collection("users").findOne({userName:data},function(err,res){
-        if (err) throw(err);
-        console.log(res);
-      });
-      dbo.collection("users").updateOne({userName:socket.user.userName},newVal,function(err){
-         if (err) throw err;
-         //them ban vao db cua minh
-      });
-      newfriend = {
-        "user": socket.user.userName,
-        "message": ""
-      }
-      newVal = { $push: {friends: newfriend}};
+  //      if (friended == 0){
+  //        console.log("Unfriended!")
+  //    MongoClient.connect(url,function(err,db){
+  //     if (err) throw err;
+  //     var dbo = db.db("social");
+  //     var newfriend = {
+  //         "user": data,
+  //         "message": ""
+  //       }
+  //     var newVal = { $push: {friends: newfriend} };
       
-      db.close();
-     });
-    }
+  //     //them ban vao db cua minh
+  //     dbo.collection("users").updateOne({userName:socket.user.userName},newVal,function(err){
+  //       if (err) throw err;
+  //     });
+
+  //     newfriend = {
+  //       "user": socket.user.userName,
+  //       "message": ""
+  //     }
+  //     newVal = { $push: {friends: newfriend}};
+  //     //them ban vao db cua ban
+  //     dbo.collection("users").updateOne({userName: data},newVal,function(err){
+  //       if (err) throw err;
+  //     });
+  //     db.close();
+  //   });
+  // }
+}
    });
+   
    ///TODO: code here
   });
 

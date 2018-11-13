@@ -9,21 +9,29 @@ socket.on('your-name',function(data){
 });
 socket.on('user-online',function(data){
     $(".newUserList ul").html("");
-    data.forEach(i => {
+    data.forEach(function(i) {
         var onlinename = i.firstName + " " +i.lastName;
-        var element = "<div><img src='/images/avt1.jpg'>  <span>"+onlinename+"</span><i class='glyphicon glyphicon-globe' onmouseover='changeImg1(this,"+i.userName+")' onmouseout='changeImg2(this)'></i></div>";
-        $(".newUserList ul").append(element);
+        var currentName = user.firstName + " " + user.lastName;
+        var username= i.userName;
+        if(currentName != onlinename){
+            var element = '<div><img src="/images/avt1.jpg">  <span>'+onlinename+'</span><i class="glyphicon glyphicon-globe" onmouseover="changeImg1(this)" onmouseout="changeImg2(this)" onClick="addFriend(\'' + username + '\')"></i></div>';
+            $(".newUserList ul").append(element);
+            
+        }
     });
 });
-function changeImg1(x,data){
-        x.className = 'glyphicon glyphicon-plus';
-        x.addEventListener('click',addFriend(data));
+function changeImg1(x){
+        x.className = "glyphicon glyphicon-plus";
 }
 function changeImg2(x){
     x.className = "glyphicon glyphicon-globe";
 }
 function addFriend(data){
     socket.emit('addfriend',data);
+
+}
+function displayNotify(){
+    confirm("Các bạn giờ đã là bạn của nhau");
 }
 function load_status(){
 socket.on('your-status',function(status){
@@ -31,9 +39,9 @@ socket.on('your-status',function(status){
     for (i=0;i<status.length;i++){
         var time = status[i].time;
         var text = status[i].text;
-        var element = "<div class='newPost'><div class='userCard'><img src='/images/avt1.jpg'><div class='newFeedFullName'><span>"+name+"</span>";
-        var element = element + "<div class='dropdown'><button data-toggle='dropdown'><i class='glyphicon glyphicon-option-vertical'></i></button><ul class='dropdown-menu'><li id ='"+i+"' onclick='statusHide("+user.userName+i+","+i+")'>Ẩn <i class='glyphicon glyphicon-eye-close'></i></li><li>Xóa <i class='glyphicon glyphicon-trash'></i></li></ul></div></div>";
-        var element = element + "<span class='timer'>"+time+"</span></div><div class='userText'><br><p id ='"+user.userName+i+"'>"+text+"</p></div></div>";
+        var element = '<div class="newPost"><div class="userCard"><img src="/images/avt1.jpg"><div class="newFeedFullName"><span>'+name+'</span>';
+        var element = element + '<div class="dropdown"><button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button><ul class="dropdown-menu"><li id ="'+i+'" onclick="statusHide(\''+user.userName+i+'\','+i+')">Ẩn <i class="glyphicon glyphicon-eye-close"></i></li><li>Xóa <i class="glyphicon glyphicon-trash"></i></li></ul></div></div>';
+        var element = element + '<span class="timer">'+time+'</span></div><div class="userText"><br><p id ="'+user.userName+i+'">'+text+'</p></div></div>';
         if (time != "")
         $(".newFeed").prepend(element);
     }
@@ -44,11 +52,11 @@ function statusHide(id,i){
     var btn = document.getElementById(i);
     if (x.style.display != "none"){
         x.style.display = "none";
-        btn.innerHTML = "Hiện <i class='glyphicon glyphicon-eye-open'></i>";
+        btn.innerHTML = 'Hiện <i class="glyphicon glyphicon-eye-open"></i>';
     }
     else{
         x.style.display = "block";
-        btn.innerHTML = "Ẩn <i class='glyphicon glyphicon-eye-close'></i>";
+        btn.innerHTML = 'Ẩn <i class="glyphicon glyphicon-eye-close"></i>';
     }
 }
 function getCurrentTime(){
