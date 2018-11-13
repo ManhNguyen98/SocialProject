@@ -20,6 +20,12 @@ socket.on('user-online',function(data){
         }
     });
 });
+socket.on('someoneAddFriend',function(user1,user2){
+    var name = user2.firstName + " " +user2.lastName;
+    if(user.userName == user1) 
+    var select = confirm(name+" muốn kết bạn với bạn");
+    socket.emit("friendResult",select,user1,user2.userName);
+});
 function changeImg1(x){
         x.className = "glyphicon glyphicon-plus";
 }
@@ -27,11 +33,12 @@ function changeImg2(x){
     x.className = "glyphicon glyphicon-globe";
 }
 function addFriend(data){
+    //displayDialogNotify();
     socket.emit('addfriend',data);
-
 }
-function displayNotify(){
-    confirm("Các bạn giờ đã là bạn của nhau");
+function displayDialogNotify(){
+    $(".modal-title").text("Thông báo");
+    $(".modal-body p").text("Kết bạn thành công");
 }
 function load_status(){
 socket.on('your-status',function(status){

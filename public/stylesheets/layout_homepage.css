@@ -375,3 +375,12 @@ body{
     padding-left:8px;
 }
 /* New Feed */
+/* Modal */
+.modal-sm{
+  position: relative;
+  top: 35vh;
+}
+.modal-footer{
+    text-align:  center;
+    border-top: none;
+}
