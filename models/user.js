@@ -26,12 +26,14 @@ var UserSchema = mongoose.Schema({
     status:[
         {
             time: String,
+            fullname: String,
             text: String
         }
     ],
     friends:[
         {
             user: String,
+            fullname: String,
             message: String
         }
     ],
@@ -42,6 +44,7 @@ var UserSchema = mongoose.Schema({
             message : [ 
                 {
                     user : String,
+                    fullname: String,
                     message : String,
                     time : String
                 }

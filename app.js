@@ -139,12 +139,14 @@ app.use(function(req,res,next){
       status: [
         {
             "time": "",
+            "fullname":"",
             "text": ""
         }
     ],
       friends: [ 
         {
             "user" : "",
+            "fullname":"",
             "message" : ""
         }
     ],
@@ -155,6 +157,7 @@ app.use(function(req,res,next){
             "message" : [ 
                 {
                     "user" : "",
+                    "fullname":"",
                     "message" : "",
                     "time" : ""
                 }
@@ -234,7 +237,22 @@ app.use(function(req,res,next){
      db.close();
    });
  }
-  
+
+ function getFullNameByUserName(username,callback){
+   MongoClient.connect(url,function(err,db){
+     if (err) console.log(err);
+     var dbo = db.db("social");
+     dbo.collection("users").findOne({userName:username},function(err,res){
+       if (err) console.log(err);
+       if (res){
+         var fullname = res.firstName + " " + res.lastName;
+         callback(fullname);
+       }
+     });
+     db.close();
+   });
+ }
+ 
   io.on("connection",function(socket){
     console.log("co nguoi ket noi: " + socket.id);
     console.log(tenuser);
@@ -246,6 +264,10 @@ app.use(function(req,res,next){
       dbo.collection("users").findOne({userName:tenuser.userName},function(err,res){
         if (err) throw err;
         oldStatus = res.status;
+        socket.emit('your-status',res.status);
+      });
+      dbo.collection("users").findOne({userName:tenuser.userName},function(err,res){
+        if (err) throw err;
         socket.emit('your-status',res.status);
       });
       dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
@@ -338,37 +360,84 @@ app.use(function(req,res,next){
       });
   }
    });
+   
    socket.on('friendResult',function(select,user1,user2){
+     
      if (select == true){
        //dong y ket ban
        //ket ban
        console.log("user 1: " + user1);
        console.log("user 2: "+ user2);
-       MongoClient.connect(url,function(err,db){
-        if (err) throw err;
-        var dbo = db.db("social");
-        var newfriend = {
-          "user": user1,
-          "message": ""
-        }
-        var newVal = { $push: {friends: newfriend} };
-           
-          //them ban vao db cua minh
-        dbo.collection("users").updateOne({userName:user2},newVal,function(err){
-            if (err) throw err;
+       getFullNameByUserName(user1,function(fullname){
+         console.log("Full name user 1 is : " + fullname);
+         MongoClient.connect(url,function(err,db){
+           if (err) console.log(err);
+           var dbo = db.db("social");
+           var newfriend = {
+              "user": user1,
+              "fullname": fullname,
+              "message": ""
+            }
+           var newVal = { $push: {friends: newfriend} };
+            //them ban vao db cua minh
+            dbo.collection("users").updateOne({userName:user2},newVal,function(err){
+              if (err) throw err;
+            });
+          db.close();
           });
-      
-        newfriend = {
-          "user": user2,
-          "message": ""
-        }
-        newVal = { $push: {friends: newfriend}};
-          //them ban vao db cua ban
-        dbo.collection("users").updateOne({userName: user1},newVal,function(err){
-            if (err) throw err;
-          });
-        db.close();
-      });
+       });
+       getFullNameByUserName(user2,function(fullname){
+         console.log("Full name user 2 is : "+ fullname);
+         MongoClient.connect(url,function(err,db){
+          if (err) console.log(err);
+          var dbo = db.db("social");
+          var newfriend = {
+             "user": user2,
+             "fullname": fullname,
+             "message": ""
+           }
+          var newVal = { $push: {friends: newfriend} };
+           //them ban vao db cua minh
+           dbo.collection("users").updateOne({userName:user1},newVal,function(err){
+             if (err) throw err;
+           });
+         db.close();
+         });
+       });
+      //  MongoClient.connect(url,function(err,db){
+      //   if (err) throw err;
+      //   var dbo = db.db("social");
+      //   getFullNameByUserName(user1,function(res){
+      //     var newfriend = {
+      //       "user": user1,
+      //       "fullname": res,
+      //       "message": ""
+      //     }
+      //     var newVal = { $push: {friends: newfriend} };
+      //   //them ban vao db cua minh
+      //     dbo.collection("users").updateOne({userName:user2},newVal,function(err){
+      //     if (err) throw err;
+      //     });
+      //   });
+      //   db.close();
+      // });
+      // MongoClient.connect(url,function(err,db){
+      //   if (err) throw err;
+      //   var dbo = db.db("social");
+      //   getFullNameByUserName(user2,function(res){
+      //     var newfriend = {
+      //       "user": user1,
+      //       "fullname": res,
+      //       "message": ""
+      //     }
+      //     var newVal = { $push: {friends: newfriend} };
+      //   //them ban vao db cua minh
+      //     dbo.collection("users").updateOne({userName:user1},newVal,function(err){
+      //     if (err) throw err;
+      //     });
+      //   });
+      //   db.close();
+      // });
       console.log("Add friend success");
      }
      else 
