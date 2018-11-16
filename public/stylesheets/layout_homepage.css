@@ -254,8 +254,11 @@ body{
 }
 .glyphicon-leaf{
     float: right;
-    color: rgb(12, 77, 181);
+    color: rgb(5, 190, 30);
     margin-top:6px;
+}
+.off{
+    color: #888888;
 }
 /* List Friend Online*/
 .newUser{

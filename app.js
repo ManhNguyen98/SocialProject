@@ -261,15 +261,16 @@ app.use(function(req,res,next){
     MongoClient.connect(url,function(err,db){
       if (err) throw err;
       var dbo = db.db("social");
-      dbo.collection("users").findOne({userName:tenuser.userName},function(err,res){
+      dbo.collection("users").findOne({userName:socket.user.userName},function(err,res){
         if (err) throw err;
         oldStatus = res.status;
         socket.emit('your-status',res.status);
+        
+        listFriend = res.friends.slice();
+        listFriend.splice(0,1);
+        socket.emit('your-friend',listFriend,listUserOnline);
       });
-      dbo.collection("users").findOne({userName:tenuser.userName},function(err,res){
-        if (err) throw err;
-        socket.emit('your-status',res.status);
-      });
+      
       dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
         if (err) throw err;
         room1oldmess = res.chat;
@@ -332,6 +333,7 @@ app.use(function(req,res,next){
       var dbo = db.db("social");
       var newObj = {
         "time" : time,
+        "fullname": user.firstName+" "+user.lastName,
         "text" : text
     }
       var newVal = { $push: {status: newObj} };
@@ -404,40 +406,6 @@ app.use(function(req,res,next){
          db.close();
          });
        });
-      //  MongoClient.connect(url,function(err,db){
-      //   if (err) throw err;
-      //   var dbo = db.db("social");
-      //   getFullNameByUserName(user1,function(res){
-      //     var newfriend = {
-      //       "user": user1,
-      //       "fullname": res,
-      //       "message": ""
-      //     }
-      //     var newVal = { $push: {friends: newfriend} };
-      //   //them ban vao db cua minh
-      //     dbo.collection("users").updateOne({userName:user2},newVal,function(err){
-      //     if (err) throw err;
-      //     });
-      //   });
-      //   db.close();
-      // });
-      // MongoClient.connect(url,function(err,db){
-      //   if (err) throw err;
-      //   var dbo = db.db("social");
-      //   getFullNameByUserName(user2,function(res){
-      //     var newfriend = {
-      //       "user": user1,
-      //       "fullname": res,
-      //       "message": ""
-      //     }
-      //     var newVal = { $push: {friends: newfriend} };
-      //   //them ban vao db cua minh
-      //     dbo.collection("users").updateOne({userName:user1},newVal,function(err){
-      //     if (err) throw err;
-      //     });
-      //   });
-      //   db.close();
-      // });
       console.log("Add friend success");
      }
      else 
