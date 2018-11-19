@@ -110,6 +110,7 @@ body{
     cursor: pointer;
     list-style: none;
     overflow-y: scroll;
+    height: 125px;
     padding: 0;
 }
 .userRoomList ul li{

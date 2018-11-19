@@ -283,6 +283,7 @@ app.use(function(req,res,next){
     //TODO: code here
     ///////////////////
     socket.emit('your-name',tenuser);
+    //send your room
     socket.emit('your-room',socket.user.room);
     io.sockets.emit('user-online',listUserOnline);
     socket.on("disconnect",function(){
@@ -434,12 +435,46 @@ app.use(function(req,res,next){
       if (err) throw err;
       var dbo = db.db("social");
       var rooms ={
-        roomName: newRoom.name,
-        isCreated: "1"
+        "roomName" : newRoom.name,
+        "isCreated" : "1",
+        "message" : [ 
+                {
+                    "user" : "",
+                    "fullname":"",
+                    "message" : "",
+                    "time" : ""
+                }
+            ]
       } 
       var newVal = {$push: {room: rooms}};
       dbo.collection("users").updateOne({userName:socket.user.userName},newVal,function(err){
         if (err) throw err;
+      });
+      dbo.collection("users").findOne({userName:socket.user.userName},function(err,res){
+        if (err) throw err;
+        socket.emit('your-room',res.room);
+      });
+      var newRoom1 = {
+        "roomName" : newRoom.name,
+        "isCreated" : "0",
+        "message" : [ 
+                {
+                    "user" : "",
+                    "fullname":"",
+                    "message" : "",
+                    "time" : ""
+                }
+            ]
+      }
+      var newVal1 = {$push: {room:newRoom1}};
+      newRoom.listFriendAdded.forEach(friendRoom => {
+        dbo.collection("users").updateOne({userName:friendRoom},newVal1,function(err){
+          if(err) throw err;
+        });
+        dbo.collection("users").findOne({userName:friendRoom},function(err,res){
+          if (err) throw err;
+          socket.in(friendRoom).broadcast.emit('your-room',res.room);
+        });
       });
       db.close();
     });

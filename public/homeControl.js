@@ -63,7 +63,7 @@ socket.on('your-friend',function(list,data){
 socket.on('user-online',function(data){
     var friendOnline = [];
     var friendOffline = [];
-    var otherPeople = data;
+    var otherPeople = data.slice();
     if (data.length != 0){
         //check co phai ban dang online
     //other people online
@@ -119,6 +119,15 @@ socket.on('someoneAddFriend',function(user1,user2){
     var select = confirm(name+" muốn kết bạn với bạn");
     socket.emit("friendResult",select,user1,user2.userName);
     location.reload();
+});
+socket.on('your-room',function(room){
+    $(".userRoomList ul").html("");
+    room.splice(0,1);
+    room.forEach(subRoom => {
+        var element = '<li>'+subRoom.roomName+'</li>';
+        $(".userRoomList ul").prepend(element);
+    });
+    
 });
 function changeImg1(x){
         x.className = "glyphicon glyphicon-plus";
@@ -183,7 +192,7 @@ function postStatus(){
     //luu status vao csdl
     socket.emit("save-status",user,timer,$(".statusText").val());
     location.reload();
-}
+    }
 }
 $(document).ready(function(){
     $(".userStatusText .statusText").focusin(function(){
