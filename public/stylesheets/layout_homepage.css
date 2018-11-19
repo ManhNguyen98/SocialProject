@@ -387,3 +387,18 @@ body{
     text-align:  center;
     border-top: none;
 }
+/* Modal tao phong */
+
+.addFriend{
+    margin-top: 10px;
+}
+.addFriend img{
+    border-radius: 50%;
+}
+.addFriend button{
+    float: right;
+}
+.addFriend button:hover{
+    background-color: rgb(12, 77, 181);
+    color: #fff;
+}

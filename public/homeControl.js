@@ -116,7 +116,6 @@ socket.on('user-online',function(data){
 });
 socket.on('someoneAddFriend',function(user1,user2){
     var name = user2.firstName + " " +user2.lastName;
-    if(user.userName == user1) 
     var select = confirm(name+" muốn kết bạn với bạn");
     socket.emit("friendResult",select,user1,user2.userName);
     location.reload();
@@ -135,6 +134,7 @@ function displayDialogNotify(){
     $(".modal-title").text("Thông báo");
     $(".modal-body p").text("Kết bạn thành công");
 }
+
 socket.on('your-status',function(status){
     $(".newFeed").html("");
     for (i=1;i<status.length;i++){
@@ -149,8 +149,8 @@ socket.on('your-status',function(status){
 })
 
 function statusHide(id,i){
-    var x = document.getElementById(id);
-    var btn = document.getElementById(i);
+    var x = document.getElementById("\'"+id+"\'");
+    var btn = document.getElementById("\'"+i+"\'");
     if (x.style.display != "none"){
         x.style.display = "none";
         btn.innerHTML = 'Hiện <i class="glyphicon glyphicon-eye-open"></i>';
@@ -201,5 +201,48 @@ $(document).ready(function(){
     $(".statusText").keyup(function(e){
         if((event.keyCode === 13 ) && ($(".statusText").val()!=null) && ($(".statusText").val()!=""))
         postStatus();
-    });    
+    });
+    $(".createRoom p").click(function(){
+        var friendAdded =[];
+        //display listFriend
+        $(".addFriend-form").html("");
+        $(".roomName input").val("")
+        listFriend.forEach(friend => {
+            var element = '<div class="addFriend"><img src="/images/avt1.jpg"> <span>'+friend.fullname+'</span><button class="btn btn-default" id="'+friend.user+'">Thêm</button></div>';
+            $(".addFriend-form").append(element);
+        });
+        $(".addFriend button").click(function(){
+            friendAdded.push($(this).attr('id'));
+            $(this).prop("disabled","true");
+        });
+        
+        $(".roomCreated").click(function(){
+            var roomName = $(".roomName input").val();
+            if (roomName == "" || roomName == null){
+            alert("Nhập tên phòng");
+            }else{
+                //kiem tra phong co ton tai
+                var found = 0
+                for (i =0;i<user.room.length;i++){
+                    if(user.room[i].roomName == roomName){
+                        found = 1;
+                    }
+                }
+                if (found == 1){
+                    alert("Phòng đã tồn tại");
+                }
+            else{
+                $(".roomCreated").attr("data-dismiss","modal");
+                $(".roomCreated").attr("data-toggle","modal");
+                $(".roomCreated").attr("data-target","#myModal");
+                var newRoom = {
+                    name: roomName,
+                    listFriendAdded: friendAdded
+                }
+                socket.emit("newRoomCreated",newRoom);
+                
+            }
+        }
+        });
+    });
 });

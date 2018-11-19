@@ -86,7 +86,7 @@
               </div>
               </div>
             <div class="createRoom">
-              <p>Tạo Phòng <span class="glyphicon glyphicon-plus"></span></p>
+              <p data-toggle="modal" data-target="#centralModalInfo">Tạo Phòng <span class="glyphicon glyphicon-plus"></span></p>
             </div>
             <div class="setting">
               <p>Cài đặt <span class="glyphicon glyphicon-cog"></span></p>
@@ -201,16 +201,52 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
+        <h4 class="modal-title">Thông báo</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <p>Tạo phòng thành công</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
       </div>
     </div>
 
+  </div>
+</div>
+<div class="modal fade" id="centralModalInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-info" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header ">
+        <label for="close" style="font-size:24px;">Tạo Phòng</label>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body mx-3">
+          <div class="roomName">
+            <input type="text" id="tenPhong" class="form-control validate" placeholder="Nhập tên phòng..." required>
+          </div>
+          <div class="addFriend-form">
+            <div class="addFriend">
+              <img src="/images/avt1.jpg"> 
+              <span>Nguyen Thiet Manh</span>
+              <button class="btn btn-default" id="Tom">Thêm</button>
+            </div>
+          </div>
+  
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" class="btn btn-primary roomCreated">Tạo phòng</a>
+        <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal">Hủy</a>
+      </div>
+    </div>
+    <!--/.Content-->
   </div>
 </div>
 </body>

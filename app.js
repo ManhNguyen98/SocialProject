@@ -258,6 +258,8 @@ app.use(function(req,res,next){
     console.log(tenuser);
     listUserOnline.push(tenuser);
     socket.user = tenuser;
+    socket.join(socket.user.userName);
+    console.log(socket.adapter.rooms);
     MongoClient.connect(url,function(err,db){
       if (err) throw err;
       var dbo = db.db("social");
@@ -281,6 +283,7 @@ app.use(function(req,res,next){
     //TODO: code here
     ///////////////////
     socket.emit('your-name',tenuser);
+    socket.emit('your-room',socket.user.room);
     io.sockets.emit('user-online',listUserOnline);
     socket.on("disconnect",function(){
     console.log("byte");
@@ -356,7 +359,7 @@ app.use(function(req,res,next){
        isFriend(data,socket.user.userName,function(err,res){
          if (err) throw err;
          if (res == 0){
-          socket.broadcast.emit('someoneAddFriend',data,socket.user);
+          socket.in(data).broadcast.emit('someoneAddFriend',data,socket.user);
         }
         else console.log("Friended!!!");
       });
@@ -385,6 +388,12 @@ app.use(function(req,res,next){
             dbo.collection("users").updateOne({userName:user2},newVal,function(err){
               if (err) throw err;
             });
+            dbo.collection("users").findOne({userName:user2},function(err,res){
+              if (err) throw err;
+              newlistFriend = res.friends.slice();
+              newlistFriend.splice(0,1);
+              socket.in(user2).broadcast.emit("your-friend",newlistFriend,listUserOnline);
+             });
           db.close();
           });
        });
@@ -403,6 +412,12 @@ app.use(function(req,res,next){
            dbo.collection("users").updateOne({userName:user1},newVal,function(err){
              if (err) throw err;
            });
+           dbo.collection("users").findOne({userName:user1},function(err,res){
+            if (err) throw err;
+            listFriend = res.friends.slice();
+            listFriend.splice(0,1);
+            socket.in(user1).broadcast.emit("your-friend",listFriend,listUserOnline);
+           });
          db.close();
          });
        });
@@ -410,6 +425,25 @@ app.use(function(req,res,next){
      }
      else 
      console.log("Add friend fail");
+   });
+   //Tao phong moi
+   socket.on('newRoomCreated',function(newRoom){
+    console.log(socket.user.userName);
+    console.log(newRoom);
+    MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      var rooms ={
+        roomName: newRoom.name,
+        isCreated: "1"
+      } 
+      var newVal = {$push: {room: rooms}};
+      dbo.collection("users").updateOne({userName:socket.user.userName},newVal,function(err){
+        if (err) throw err;
+      });
+      db.close();
+    });
+
    });
    ///TODO: code here
   });
