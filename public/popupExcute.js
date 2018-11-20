@@ -47,7 +47,7 @@ socket.on("your-mess",function(data){
     var time = getCurrentTime();
     var mess = data.split("``");
     var message = mess[1];
-    var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + message +"</div></div><div class = 'message-footer u-footer'>"+time+"</div></li>"
+    var element = '<li class="messages"><div class="messages-container-u"><div class="user-avt"><img src = "/images/avt1.jpg"></div><div class = "u-message-text">' + message +'</div></div><div class = "message-footer u-footer">'+time+'</div></li>';
     $(".pop-up-mess").append(element);
 });
 //pop-up function
@@ -115,9 +115,9 @@ function register_popup(id, name){
             return;
         }
     }
-    var element = "<div class='pop-up-box' id = '" + id + "'><div class='pop-up-head' onclick='hide_popup()'><div class='pop-up-left'>"+name+"</div>";
-    var element1 = "<div class='pop-up-right' onclick='close_popup("+id+")'><div id='close'>&#10005</div></div></div><div class='pop-up-mess'></div><div class='pop-up-footer'>";
-    var element2 ="<input name='message' id='mess' placeholder='Nhập tin nhắn...'><button class='btnSend btnSend-tuvantinhcam'>SEND</button></div></div>";
+    var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head" onclick="hide_popup()"><div class="pop-up-left">'+name+'</div>';
+    var element1 = '<div class="pop-up-right" onclick="close_popup('+id+')"><div id="close">&#10005</div></div></div><div class="pop-up-mess"></div><div class="pop-up-footer">';
+    var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-tuvantinhcam">SEND</button></div></div>';
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
     $("#mess").focus();
     popups.unshift(id);

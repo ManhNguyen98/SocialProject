@@ -1,5 +1,6 @@
 var user;
 var listFriend=[];
+
 socket.on('your-name',function(name){
     user = name;
     var fullname = name.firstName +" "+ name.lastName;
@@ -124,11 +125,20 @@ socket.on('your-room',function(room){
     $(".userRoomList ul").html("");
     room.splice(0,1);
     room.forEach(subRoom => {
-        var element = '<li>'+subRoom.roomName+'</li>';
+        var element = '<li onclick="roomChat(\''+subRoom.roomName+'\')">'+subRoom.roomName+'</li>';
         $(".userRoomList ul").prepend(element);
     });
     
 });
+function roomChat(id){
+    var element = document.getElementById(id);
+    if (element!=undefined){
+        element.removeAttribute("id");
+        register_popup(id,id);
+    }
+    else
+    register_popup(id,id);
+}
 function changeImg1(x){
         x.className = "glyphicon glyphicon-plus";
 }
