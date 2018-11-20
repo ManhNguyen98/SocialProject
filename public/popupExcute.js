@@ -74,7 +74,16 @@ function close_popup(id){
             }
         }
 };
-
+function close_popup(id){
+    for (var i = 0; i < popups.length; i++){
+            if ( id.id == popups[i]){
+                Array.remove(popups,i);
+                document.getElementById(id.id).style.display = "none";
+                calculate_popups();
+                return;
+            }
+        }
+};
 function hide_popup(){
         $(".pop-up-mess").hide();
         $(".pop-up-footer").hide();
@@ -116,8 +125,8 @@ function register_popup(id, name){
         }
     }
     var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head" onclick="hide_popup()"><div class="pop-up-left">'+name+'</div>';
-    var element1 = '<div class="pop-up-right" onclick="close_popup('+id+')"><div id="close">&#10005</div></div></div><div class="pop-up-mess"></div><div class="pop-up-footer">';
-    var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-tuvantinhcam">SEND</button></div></div>';
+    var element1 = '<div class="pop-up-right" onclick="close_popup('+id+')"><div id="close">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
+    var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-'+id+'">SEND</button></div></div>';
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
     $("#mess").focus();
     popups.unshift(id);

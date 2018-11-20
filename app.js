@@ -329,7 +329,24 @@ app.use(function(req,res,next){
       db.close();
     });
    });
-
+//user room
+socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
+  socket.join(nameOfRoom);
+  //load tin nhan cu len
+  MongoClient.connect(url,function(err,db){
+    if (err) throw err;
+    var dbo = db.db("social");
+    dbo.collection("users").findOne({userName:nameOfUser},function(err,res){
+      if(err) throw err;
+      res.room.forEach(subRoom => {
+        if(subRoom.roomName == nameOfRoom){
+          socket.emit("OldMessageOfRoom",nameOfRoom,subRoom.message);
+        }
+      });
+    });
+    db.close();
+  });
+});
    //luu status
    socket.on("save-status",function(user,time,text){
      MongoClient.connect(url,function(err,db){
