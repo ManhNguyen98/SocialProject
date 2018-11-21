@@ -253,6 +253,19 @@ app.use(function(req,res,next){
    });
  }
  
+ function getListFriendOfRoom(nameOfRoom,callback){
+   MongoClient.connect(url,function(err,db){
+    if (err) console.log(err);
+    var dbo = db.db("social");
+    dbo.collection("rooms").findOne({roomName: nameOfRoom},function(err,res){
+      if (err) throw err;
+      if (res){
+        callback(res.listFriendInRoom);
+      }
+    });
+    db.close();
+   });
+ }
   io.on("connection",function(socket){
     console.log("co nguoi ket noi: " + socket.id);
     console.log(tenuser);
@@ -309,25 +322,27 @@ app.use(function(req,res,next){
     });
    });
    //chat
-   socket.on('tuvantinhcam-chatting',function(data){
-    socket.in('tuvantinhcam').broadcast.emit("tuvantinhcam-chat",data);
-    socket.emit('your-mess',data);
+   socket.on('room-chatting',function(id,newMessage){
+     console.log(id)
+     console.log(newMessage);
+    socket.in(id).broadcast.emit("room-chat",id,newMessage);
+    socket.emit('your-mess',id,newMessage);
     //luu tin nhan vao db
-    MongoClient.connect(url,function(err,db){
-      if (err) throw err;
-      var dbo = db.db("social");
-      var newMess = { $set: {chat: room1oldmess + data + "```"}};
+    // MongoClient.connect(url,function(err,db){
+    //   if (err) throw err;
+    //   var dbo = db.db("social");
+    //   var newVal = { $push: {mess: room1oldmess + data + "```"}};
 
-      dbo.collection("rooms").updateOne({roomName:'chuyentinhcam'},newMess,function(err){
-        if (err) throw err;
-      });
+    //   dbo.collection("rooms").updateOne({roomName:'chuyentinhcam'},newMess,function(err){
+    //     if (err) throw err;
+    //   });
 
-      dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
-        if (err) throw err;
-        room1oldmess = res.chat;
-      });
-      db.close();
-    });
+    //   dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
+    //     if (err) throw err;
+    //     room1oldmess = res.chat;
+    //   });
+    //   db.close();
+    // });
    });
 //user room
 socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
@@ -470,6 +485,9 @@ socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
       dbo.collection("users").findOne({userName:socket.user.userName},function(err,res){
         if (err) throw err;
         socket.emit('your-room',res.room);
+      });
+      dbo.collection("rooms").insertOne({roomName:newRoom.name,listFriendInRoom:newRoom.listFriendAdded},function(err){
+        if (err) throw err;
       });
       var newRoom1 = {
         "roomName" : newRoom.name,

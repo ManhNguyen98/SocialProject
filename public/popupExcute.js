@@ -21,13 +21,9 @@ socket.on("old-mess-room1",function(data){
     };
 });
 
-socket.on("tuvantinhcam-chat",function(data){
-    var time = getCurrentTime();
-    var mess = data.split("``");
-    var username = mess[0];
-    var message = mess[1];
-    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+username+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + message +"</div></div><div class = 'message-footer o-footer'>"+time+"</div></li>"
-    $(".pop-up-mess").append(element);
+socket.on("room-chat",function(id, newMessage){
+    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+newMessage.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + newMessage.message +"</div></div><div class = 'message-footer o-footer'>"+newMessage.time+"</div></li>"
+    $('.pop-up-mess.' + id).append(element);
     $('[data-toggle="tooltip"]').tooltip();  
 });
 function getCurrentTime(){
@@ -43,12 +39,9 @@ function getCurrentTime(){
     var time = day + "/"+month+"/" + d.getFullYear() + " " + hours + ":" + minute;
     return time;
 }
-socket.on("your-mess",function(data){
-    var time = getCurrentTime();
-    var mess = data.split("``");
-    var message = mess[1];
-    var element = '<li class="messages"><div class="messages-container-u"><div class="user-avt"><img src = "/images/avt1.jpg"></div><div class = "u-message-text">' + message +'</div></div><div class = "message-footer u-footer">'+time+'</div></li>';
-    $(".pop-up-mess").append(element);
+socket.on("your-mess",function(id,newMessage){
+    var element = '<li class="messages"><div class="messages-container-u"><div class="user-avt"><img src = "/images/avt1.jpg"></div><div class = "u-message-text">' + newMessage.message +'</div></div><div class = "message-footer u-footer">'+newMessage.time+'</div></li>';
+    $('.pop-up-mess.' + id).append(element);
 });
 //pop-up function
 //remove array element
@@ -126,13 +119,26 @@ function register_popup(id, name){
     }
     var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head" onclick="hide_popup()"><div class="pop-up-left">'+name+'</div>';
     var element1 = '<div class="pop-up-right" onclick="close_popup('+id+')"><div id="close">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
-    var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-'+id+'">SEND</button></div></div>';
+    var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-'+id+'" onclick ="sendMessage(\''+id+'\')">SEND</button></div></div>';
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
     $("#mess").focus();
     popups.unshift(id);
     calculate_popups();
 };
 
+function sendMessage(id){
+   var element = "#" + id + " #mess";
+    if($(element).val()!=null && $(element).val() !=""){
+        var newMessage={
+            user: user.userName,
+            fullname: user.firstName + " " + user.lastName,
+            message: $(element).val(),
+            time: getCurrentTime()
+        }
+        socket.emit('room-chatting',id,newMessage);
+        $(element).val("");
+    }
+}
 //calculate totals_popup
 function calculate_popups(){
     var width = $("#middle").innerWidth();
@@ -149,17 +155,9 @@ $(document).ready(function(){
 
         socket.emit('tuvantinhcam-CreateRoom','tuvantinhcam');
 
-        $("#tuvantinhcampopup .btnSend-tuvantinhcam").click(function(){
-            if($("#tuvantinhcampopup #mess").val()!=null && $("#tuvantinhcampopup #mess").val() !=""){
-                var message=user.userName + "``" + $("#tuvantinhcampopup #mess").val();
-                socket.emit('tuvantinhcam-chatting',message);
-                $("#tuvantinhcampopup #mess").val("");
-            }
-        })
-
         $("#tuvantinhcampopup #mess").keyup(function(e){
             if((event.keyCode === 13 ) && ($("#tuvantinhcampopup #mess").val()!=null) && ($("#tuvantinhcampopup #mess").val()!="")){
-                $("#tuvantinhcampopup .btnSend-tuvantinhcam").click();
+                $("#tuvantinhcampopup .btnSend-tuvantinhcampopup").click();
             }
         });
 
