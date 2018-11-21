@@ -323,26 +323,19 @@ app.use(function(req,res,next){
    });
    //chat
    socket.on('room-chatting',function(id,newMessage){
-     console.log(id)
-     console.log(newMessage);
     socket.in(id).broadcast.emit("room-chat",id,newMessage);
     socket.emit('your-mess',id,newMessage);
     //luu tin nhan vao db
-    // MongoClient.connect(url,function(err,db){
-    //   if (err) throw err;
-    //   var dbo = db.db("social");
-    //   var newVal = { $push: {mess: room1oldmess + data + "```"}};
-
-    //   dbo.collection("rooms").updateOne({roomName:'chuyentinhcam'},newMess,function(err){
-    //     if (err) throw err;
-    //   });
-
-    //   dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
-    //     if (err) throw err;
-    //     room1oldmess = res.chat;
-    //   });
-    //   db.close();
-    // });
+    MongoClient.connect(url,function(err,db){
+      if (err) throw err;
+      var dbo = db.db("social");
+      var newVal = {$push: {"room.$.message":newMessage}}
+      //tim cac user co room ma roomName = id
+      dbo.collection("users").updateMany({room:{$elemMatch:{roomName:id}}},newVal,function(err){
+        if (err) throw err;
+      });
+      db.close();
+    });
    });
 //user room
 socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
