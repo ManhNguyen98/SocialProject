@@ -286,10 +286,6 @@ app.use(function(req,res,next){
         socket.emit('your-friend',listFriend,listUserOnline);
       });
       
-      dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
-        if (err) throw err;
-        room1oldmess = res.chat;
-      });
       db.close();
     });
     //GetNameByUserName
@@ -305,18 +301,16 @@ app.use(function(req,res,next){
     socket.broadcast.emit('user-online',listUserOnline);
    });
     //tao Room
-   socket.on('tuvantinhcam-CreateRoom',function(data){
+   socket.on('CreateRoomDefault',function(data){
     socket.join(data);
     //Load tin nhan cu len
     MongoClient.connect(url,function(err,db){
       if (err) throw err;
       var dbo = db.db("social");
       
-      dbo.collection("rooms").findOne({roomName:'chuyentinhcam'},function(err,res){
+      dbo.collection("rooms").findOne({roomName: data},function(err,res){
         if (err) throw err;
-        room1oldmess = res.chat;
-        socket.emit("old-mess-room1",res.chat);
-        //console.log(res.chat);
+        socket.emit("OldMessDefaultRoom",data,res.chat);
       });
       db.close();
     });
@@ -331,9 +325,20 @@ app.use(function(req,res,next){
       var dbo = db.db("social");
       var newVal = {$push: {"room.$.message":newMessage}}
       //tim cac user co room ma roomName = id
-      dbo.collection("users").updateMany({room:{$elemMatch:{roomName:id}}},newVal,function(err){
-        if (err) throw err;
-      });
+      switch(id){
+        case 'chuyentinhcam':
+        case 'buonban':
+        case 'congnghe':
+        case 'danhchome':
+        dbo.collection("rooms").updateOne({roomName:id},{$push:{chat:newMessage}},function(err){
+          if (err) throw err;
+        });
+        break;
+        default:
+        dbo.collection("users").updateMany({room:{$elemMatch:{roomName:id}}},newVal,function(err){
+          if (err) throw err;
+        });
+      }
       db.close();
     });
    });

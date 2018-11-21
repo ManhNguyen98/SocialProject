@@ -134,14 +134,17 @@ function roomChat(id){
     var element = document.getElementById(id);
     if (element!=undefined){
         element.removeAttribute("id");
-        register_popup(id,id);
     }
-    else
     register_popup(id,id);
+    var element1 = "#" + id + " #mess";
+    $(element1).keyup(function(event){
+        if((event.keyCode === 13 ) && ($(element1).val()!=null) && ($(element1).val()!="")){
+            $(".btnSend-"+id).click();
+        }
+    });
     socket.emit('CreateRoomWithIDName',id,user.userName);//tao phong
 }
 socket.on("OldMessageOfRoom",function(nameOfRoom,OldMessage){
-
     OldMessage.forEach(message => {
     if (message.message != ""){
         if (message.user != user.userName){
