@@ -335,7 +335,7 @@ app.use(function(req,res,next){
         });
         break;
         default:
-        dbo.collection("users").updateMany({room:{$elemMatch:{roomName:id}}},newVal,function(err){
+        dbo.collection("users").updateMany({room:{$elemMatch:{roomID:id}}},newVal,function(err){
           if (err) throw err;
         });
       }
@@ -343,8 +343,8 @@ app.use(function(req,res,next){
     });
    });
 //user room
-socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
-  socket.join(nameOfRoom);
+socket.on('CreateRoomWithIDName',function(roomID,nameOfRoom,nameOfUser){
+  socket.join(roomID);
   //load tin nhan cu len
   MongoClient.connect(url,function(err,db){
     if (err) throw err;
@@ -352,13 +352,30 @@ socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
     dbo.collection("users").findOne({userName:nameOfUser},function(err,res){
       if(err) throw err;
       res.room.forEach(subRoom => {
-        if(subRoom.roomName == nameOfRoom){
-          socket.emit("OldMessageOfRoom",nameOfRoom,subRoom.message);
+        if(subRoom.roomID == roomID){
+          socket.emit("OldMessageOfRoom",roomID,nameOfRoom,subRoom.message);
         }
       });
     });
     db.close();
   });
+});
+//Chat with friend
+socket.on('userChatWithFriend',function(user,friend){
+  //load tin nhan cu len
+  MongoClient.connect(url,function(err,db){
+    if (err) throw err;
+    var dbo = db.db("social");
+    dbo.collection("users").findOne({userName:user},function(err,res){
+      if (err) throw err;
+      res.friends.forEach(subFriend => {
+        if (subFriend.user == friend){
+          socket.emit("OldMessageWithFriend",friend,subFriend.message);
+        }
+      });
+    });
+    db.close();
+});
 });
    //luu status
    socket.on("save-status",function(user,time,text){
@@ -465,6 +482,7 @@ socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
       if (err) throw err;
       var dbo = db.db("social");
       var rooms ={
+        "roomID":newRoom.roomID,
         "roomName" : newRoom.name,
         "isCreated" : "1",
         "message" : [ 
@@ -488,6 +506,7 @@ socket.on('CreateRoomWithIDName',function(nameOfRoom,nameOfUser){
         if (err) throw err;
       });
       var newRoom1 = {
+        "roomID": newRoom.roomID,
         "roomName" : newRoom.name,
         "isCreated" : "0",
         "message" : [ 

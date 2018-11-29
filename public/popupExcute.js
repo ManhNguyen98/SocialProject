@@ -70,6 +70,7 @@ var popups = [];
 
 //function close pop up
 function close_popup(id){
+    if(id.id != undefined)
     for (var i = 0; i < popups.length; i++){
             if ( id.id == popups[i]){
                 Array.remove(popups,i);
@@ -78,6 +79,15 @@ function close_popup(id){
                 return;
             }
         }
+    else
+    for (var i = 0; i < popups.length; i++){
+        if ( id == popups[i]){
+            Array.remove(popups,i);
+            document.getElementById(id).style.display = "none";
+            calculate_popups();
+            return;
+        }
+    }
 };
 
 function hide_popup(){

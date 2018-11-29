@@ -9,7 +9,7 @@ socket.on('your-name',function(name){
     $(".userName").html("@"+username);
 });
 socket.on('your-friend',function(list,data){
-    listFriend = list;
+    listFriend = list.slice();
     var friendOnline1 = [];
     var friendOffline1 = [];
     var otherPeople1 = data.slice();
@@ -39,12 +39,12 @@ socket.on('your-friend',function(list,data){
     
     $(".listFriend ul").html("");
     friendOffline1.forEach(friend => {
-        var element = '<div><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf off"></i></div>'
+        var element = '<div onclick ="chatWithFriend(\''+friend.user+'\',\''+friend.fullname+'\')"><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf off"></i></div>'
         $(".listFriend ul").append(element);
     });
     friendOffline1=[];
     friendOnline1.forEach(friend => {
-        var element = '<div><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf "></i></div>'
+        var element = '<div onclick = "chatWithFriens(\''+friend.user+'\',\''+friend.fullname+'\')"><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf "></i></div>'
         $(".listFriend ul").prepend(element);
     });
     friendOnline1 = [];
@@ -54,7 +54,7 @@ socket.on('your-friend',function(list,data){
         var currentName = user.firstName + " " + user.lastName;
         var username= i.userName;
         if(currentName != onlinename){
-            var element = '<div><img src="/images/avt1.jpg">  <span>'+onlinename+'</span><i class="glyphicon glyphicon-globe" onmouseover="changeImg1(this)" onmouseout="changeImg2(this)" onClick="addFriend(\'' + username + '\')"></i></div>';
+            var element = '<div onclick = "chatWithFriend(\''+i.userName+'\',\''+onlinename+'\')"><img src="/images/avt1.jpg">  <span>'+onlinename+'</span><i class="glyphicon glyphicon-globe" onmouseover="changeImg1(this)" onmouseout="changeImg2(this)" onClick="addFriend(\'' + username + '\')"></i></div>';
             $(".newUserList ul").append(element);
             
         }
@@ -96,11 +96,11 @@ socket.on('user-online',function(data){
     }
     $(".listFriend ul").html("");
     friendOffline.forEach(friend => {
-        var element = '<div><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf off"></i></div>'
+        var element = '<div onclick="chatWithFriend(\''+friend.user+'\',\''+friend.fullname+'\')"><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf off"></i></div>'
         $(".listFriend ul").prepend(element);
     });
     friendOnline.forEach(friend => {
-        var element = '<div><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf "></i></div>'
+        var element = '<div onclick = "chatWithFriend(\''+friend.user+'\',\''+friend.fullname+'\')"><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf "></i></div>'
         $(".listFriend ul").prepend(element);
     });
     $(".newUserList ul").html("");
@@ -109,7 +109,7 @@ socket.on('user-online',function(data){
         var currentName = user.firstName + " " + user.lastName;
         var username = i.userName;
         if(currentName != onlinename){
-            var element = '<div><img src="/images/avt1.jpg">  <span>'+onlinename+'</span><i class="glyphicon glyphicon-globe" onmouseover="changeImg1(this)" onmouseout="changeImg2(this)" onClick="addFriend(\'' + username + '\')"></i></div>';
+            var element = '<div onclick ="chatWithFriend(\''+i.userName+'\',\''+onlinename+'\')"><img src="/images/avt1.jpg">  <span>'+onlinename+'</span><i class="glyphicon glyphicon-globe" onmouseover="changeImg1(this)" onmouseout="changeImg2(this)" onClick="addFriend(\'' + username + '\')"></i></div>';
             $(".newUserList ul").append(element);
             
         }
@@ -125,26 +125,42 @@ socket.on('your-room',function(room){
     $(".userRoomList ul").html("");
     room.splice(0,1);
     room.forEach(subRoom => {
-        var element = '<li onclick="roomChat(\''+subRoom.roomName+'\')">'+subRoom.roomName+'</li>';
+        var element = '<li onclick="roomChat(\''+subRoom.roomID+'\',\''+subRoom.roomName+'\')">'+subRoom.roomName+'</li>';
         $(".userRoomList ul").prepend(element);
     });
     
 });
-function roomChat(id){
-    var element = document.getElementById(id);
+function roomChat(roomID,name){
+    var element = document.getElementById(roomID);
     if (element!=undefined){
         element.removeAttribute("id");
     }
-    register_popup(id,id);
-    var element1 = "#" + id + " #mess";
+    register_popup(roomID,name);
+    var element1 = "#" + roomID + " #mess";
     $(element1).keyup(function(event){
         if((event.keyCode === 13 ) && ($(element1).val()!=null) && ($(element1).val()!="")){
-            $(".btnSend-"+id).click();
+            $(".btnSend-"+roomID).click();
         }
     });
-    socket.emit('CreateRoomWithIDName',id,user.userName);//tao phong
+    socket.emit('CreateRoomWithIDName',roomID,name,user.userName);//tao phong
 }
-socket.on("OldMessageOfRoom",function(nameOfRoom,OldMessage){
+function chatWithFriend(users,fullname){
+    var temp = users;
+    if (!isNaN(users.charAt(0))) users = "a" + users;
+    var element = document.getElementById(users);
+    if (element!=undefined){
+        element.removeAttribute("id");
+    }
+    register_popups_friend(users,fullname);
+    var element1 = "#" + users + " #mess";
+    $(element1).keyup(function(event){
+        if((event.keyCode === 13 ) && ($(element1).val()!=null) && ($(element1).val()!="")){
+            $(".btnSend-"+users).click();
+        }
+    });
+    socket.emit("userChatWithFriend",user.userName,temp);
+}
+socket.on("OldMessageOfRoom",function(roomID,nameOfRoom,OldMessage){
     OldMessage.forEach(message => {
     if (message.message != ""){
         if (message.user != user.userName){
@@ -154,7 +170,7 @@ socket.on("OldMessageOfRoom",function(nameOfRoom,OldMessage){
             var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + message.message +"</div></div><div class = 'message-footer u-footer'></div></li>";
         }
     }
-        $('.pop-up-mess.' + nameOfRoom).append(element);
+        $('.pop-up-mess.' + roomID).append(element);
         $('[data-toggle="tooltip"]').tooltip();  
     });
 });
@@ -223,6 +239,24 @@ function postStatus(){
     location.reload();
     }
 }
+function xoa_dau(str) {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+    str = str.replace(/Đ/g, "D");
+    str = str.replace(/\s/g,'');
+    return str;
+}
 $(document).ready(function(){
     $(".userStatusText .statusText").focusin(function(){
         $(".userStatus").css("height","180px");
@@ -275,6 +309,7 @@ $(document).ready(function(){
                 $(".roomCreated").attr("data-target","#myModal");
                 var newRoom = {
                     name: roomName,
+                    roomID : xoa_dau(roomName),
                     listFriendAdded: friendAdded
                 }
                 socket.emit("newRoomCreated",newRoom);
