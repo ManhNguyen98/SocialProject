@@ -103,18 +103,17 @@ socket.on("friend-chat",function(id,newMessage){
     $('[data-toggle="tooltip"]').tooltip(); 
 });
 socket.on("OldMessageWithFriend",function(friend,message){
-    // message.forEach(submess => {
-    //     if (submess.user == user.userName){
-    //         submess.user = "a" +submess;
-    //         var element = '<li class="messages"><div class="messages-container-u"><div class="user-avt"><img src = "/images/avt1.jpg"></div><div class = "u-message-text">' + submess.message +'</div></div><div class = "message-footer u-footer">'+submess.time+'</div></li>';
-    //         $('.pop-up-mess.' + submess.user).append(element);
-    //     }
-    //     else{
-    //     var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+newMessage.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + newMessage.message +"</div></div><div class = 'message-footer o-footer'>"+newMessage.time+"</div></li>"
-    //     $('.pop-up-mess.' + id).append(element);
-    //     $('[data-toggle="tooltip"]').tooltip(); 
-    //     }
-    // });
+    friend = "a" +friend;
+    message.forEach(submess => {
+        if (submess.user == user.userName){
+            var element = '<li class="messages"><div class="messages-container-u"><div class="user-avt"><img src = "/images/avt1.jpg"></div><div class = "u-message-text">' + submess.message +'</div></div><div class = "message-footer u-footer">'+submess.time+'</div></li>';
+        }
+        else{
+            var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+submess.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + submess.message +"</div></div><div class = 'message-footer o-footer'>"+submess.time+"</div></li>"
+        }
+        $('.pop-up-mess.' + friend).append(element);
+        $('[data-toggle="tooltip"]').tooltip(); 
+    });
 });
 // socket.on("room-chat",function(id, newMessage){
 //     var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+newMessage.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + newMessage.message +"</div></div><div class = 'message-footer o-footer'>"+newMessage.time+"</div></li>"
