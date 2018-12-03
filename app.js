@@ -335,6 +335,7 @@ app.use(function(req,res,next){
         });
         break;
         default:
+        //tim tat ca cac record co room la id
         dbo.collection("users").updateMany({room:{$elemMatch:{roomID:id}}},newVal,function(err){
           if (err) throw err;
         });
@@ -370,12 +371,29 @@ socket.on('userChatWithFriend',function(user,friend){
       if (err) throw err;
       res.friends.forEach(subFriend => {
         if (subFriend.user == friend){
-          socket.emit("OldMessageWithFriend",friend,subFriend.message);
+          socket.emit("OldMessageWithFriend",friend,subFriend.mesage);
         }
       });
     });
     db.close();
 });
+});
+//chat voi ban
+socket.on('friend-chatting',function(userto,mess,userfrom){
+  socket.in(userto).broadcast.emit("friend-chat",userfrom,mess);
+  socket.emit('yourMessWithFriend',userto,mess);
+  //luu tin nhan vao database
+  MongoClient.connect(url,function(err,db){
+    if (err) throw err;
+    var dbo = db.db("social");
+    var newVal = { $push:{"friends.$.mesage":mess}};
+    dbo.collection("users").updateOne({$and:[{userName:userto},{"friends.user":userfrom}]},newVal,function(err){
+      if (err) throw err;
+    });
+    dbo.collection("users").updateOne({$and:[{userName:userfrom},{"friends.user":userto}]},newVal,function(err){
+      if (err) throw err;
+    });
+  });
 });
    //luu status
    socket.on("save-status",function(user,time,text){

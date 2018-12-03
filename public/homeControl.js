@@ -44,7 +44,7 @@ socket.on('your-friend',function(list,data){
     });
     friendOffline1=[];
     friendOnline1.forEach(friend => {
-        var element = '<div onclick = "chatWithFriens(\''+friend.user+'\',\''+friend.fullname+'\')"><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf "></i></div>'
+        var element = '<div onclick = "chatWithFriend(\''+friend.user+'\',\''+friend.fullname+'\')"><img src="/images/avt1.jpg">  <span>'+friend.fullname+'</span><i class="glyphicon glyphicon-leaf "></i></div>'
         $(".listFriend ul").prepend(element);
     });
     friendOnline1 = [];
@@ -146,7 +146,9 @@ function roomChat(roomID,name){
 }
 function chatWithFriend(users,fullname){
     var temp = users;
-    if (!isNaN(users.charAt(0))) users = "a" + users;
+    //bat dau bang so
+    //if (!isNaN(users.charAt(0)))
+    users = "a" + users;
     var element = document.getElementById(users);
     if (element!=undefined){
         element.removeAttribute("id");
@@ -195,7 +197,7 @@ socket.on('your-status',function(status){
         var time = status[i].time;
         var text = status[i].text;
         var element = '<div class="newPost"><div class="userCard"><img src="/images/avt1.jpg"><div class="newFeedFullName"><span>'+status[i].fullname+'</span>';
-        var element = element + '<div class="dropdown"><button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button><ul class="dropdown-menu"><li id ="\''+i+'\'" onclick="statusHide(\''+user.userName+i+'\','+i+')">Ẩn <i class="glyphicon glyphicon-eye-close"></i></li><li>Xóa <i class="glyphicon glyphicon-trash"></i></li></ul></div></div>';
+        var element = element + '<div class="dropdown"><button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button><ul class="dropdown-menu"><li id ="\''+i+'\'" onclick="statusHide(\''+user.userName+i+'\','+i+')">Ẩn <i class="glyphicon glyphicon-eye-close"></i></li><li>Chia sẻ <i class="glyphicon glyphicon-share"></i></li></ul></div></div>';
         var element = element + '<span class="timer">'+time+'</span></div><div class="userText"><br><p id ="\''+user.userName+i+'\'">'+text+'</p></div></div>';
         if (time != "")
         $(".newFeed").prepend(element);
