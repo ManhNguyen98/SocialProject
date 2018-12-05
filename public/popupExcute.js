@@ -9,7 +9,7 @@ socket.on("OldMessDefaultRoom",function(data,chat){
     chat.forEach(oldMess => {    
     if (oldMess.message!=""){
     if (oldMess.user != user.userName){
-        var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+oldMess.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" +oldMess.message +"</div></div><div class = 'message-footer o-footer'></div></li>";
+        var element = "<li class='messages'><div class='message-header'>"+oldMess.fullname+"</div><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+oldMess.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" +oldMess.message +"</div></div><div class = 'message-footer o-footer'></div></li>";
     }
     else
     var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + oldMess.message +"</div></div><div class = 'message-footer u-footer'></div></li>";
@@ -20,7 +20,7 @@ socket.on("OldMessDefaultRoom",function(data,chat){
 });
 
 socket.on("room-chat",function(id, newMessage){
-    var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+newMessage.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + newMessage.message +"</div></div><div class = 'message-footer o-footer'>"+newMessage.time+"</div></li>"
+    var element = "<li class='messages'><div class='message-header'>"+newMessage.fullname+"</div><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+newMessage.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + newMessage.message +"</div></div><div class = 'message-footer o-footer'>"+newMessage.time+"</div></li>"
     $('.pop-up-mess.' + id).append(element);
     $('[data-toggle="tooltip"]').tooltip();  
 });
@@ -131,7 +131,7 @@ function register_popup(id, name){
         }
     }
     var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head" onclick="hide_popup()"><div class="pop-up-left">'+name+'</div>';
-    var element1 = '<div class="pop-up-right" onclick="close_popup('+id+')"><div id="close">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
+    var element1 = '<div class="pop-up-right"><div class="room-setup" data-toggle="tooltip" data-placement="top" title="Thành viên">&#9784</div><div data-toggle="tooltip" data-placement="top" title="Đóng" id="close"onclick="close_popup('+id+')">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
     var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-'+id+'" onclick ="sendMessage(\''+id+'\')">SEND</button></div></div>';
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
     $("#mess").focus();

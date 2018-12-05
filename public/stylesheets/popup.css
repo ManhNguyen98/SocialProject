@@ -26,19 +26,32 @@
   
   .pop-up-right{
       float: right;
+      display: flex;
+      flex-direction: row;
       cursor: pointer;
-      opacity: 0.5;
   }
   
-  .pop-up-right:hover{
-      opacity: 1;
-  }
-  #close{
-      padding-right: 5px; 
-      text-align: right;
-      
-  }
-  
+.room-setup{
+    padding-right: 5px; 
+    text-align: center;
+    font-size: 20px;
+    opacity: 0.5;
+}
+.room-setup[title]{
+    width: 40px;
+}
+.room-setup:hover{
+    opacity: 1;
+}
+#close{
+    padding-right: 5px; 
+    text-align: right;
+    opacity: 0.5;
+}
+#close:hover{
+    opacity: 1;
+}
+
   .pop-up-mess{
       height: 280px;
       width: 100%;
@@ -216,7 +229,11 @@
     flex-direction: row;
     margin-left: 38px;
 }
-
+.message-header{
+    margin-left: 38px;
+    font-size: 11px;
+    opacity: 0.8;
+}
 #pop-up-hide{
     position: absolute;
     background-color: rgb(226, 225, 225);

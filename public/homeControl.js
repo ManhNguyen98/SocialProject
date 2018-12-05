@@ -166,7 +166,7 @@ socket.on("OldMessageOfRoom",function(roomID,nameOfRoom,OldMessage){
     OldMessage.forEach(message => {
     if (message.message != ""){
         if (message.user != user.userName){
-            var element = "<li class='messages'><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+message.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + message.message +"</div></div><div class = 'message-footer o-footer'></div></li>";
+            var element = "<li class='messages'><div class='message-header'>"+message.fullname+"</div><div class='messages-container-o'><div class='other-avt'><a href='#' data-toggle='tooltip' data-placement='top' title='"+message.fullname+"'><img src = '/images/avt1.jpg'></a></div><div class = 'o-message-text'>" + message.message +"</div></div><div class = 'message-footer o-footer'></div></li>";
         }
         else{
             var element = "<li class='messages'><div class='messages-container-u'><div class='user-avt'><img src = '/images/avt1.jpg'></div><div class = 'u-message-text'>" + message.message +"</div></div><div class = 'message-footer u-footer'></div></li>";
