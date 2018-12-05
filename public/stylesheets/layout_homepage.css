@@ -403,3 +403,25 @@ body{
     background-color: rgb(12, 77, 181);
     color: #fff;
 }
+/* Room Member */
+.roomMember{
+    position: fixed;
+    display: none;
+    top: 435px;
+    left:650px;
+    background-color: #fff;
+    box-shadow: 1px 3px 5px #888888;
+    width: 255px;
+}
+.roomMember-header p{
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    border-bottom: solid #888888 1px;
+    opacity: 0.8;
+    margin: 0;
+}
+.member img{
+    border-radius: 50%;
+    padding: 3px;
+}

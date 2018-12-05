@@ -20,6 +20,7 @@ var Room = require('./models/room');
 var tenuser = new User() ;
 var oldStatus;
 var room1oldmess;
+var temp = [];
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -253,7 +254,7 @@ app.use(function(req,res,next){
    });
  }
  
- function getListFriendOfRoom(nameOfRoom,callback){
+ function getListFriendOfRoomDefault(nameOfRoom,callback){
    MongoClient.connect(url,function(err,db){
     if (err) console.log(err);
     var dbo = db.db("social");
@@ -265,6 +266,17 @@ app.use(function(req,res,next){
     });
     db.close();
    });
+ }
+ function getListFriendOfYourRoom(ID,callback){
+   MongoClient.connect(url,function(err,db){
+     if (err) throw err;
+     var dbo = db.db("social");
+     dbo.collection("users").find({room:{$elemMatch:{roomID:ID}}}).toArray(function(err,res){
+      if (err) throw err; 
+      callback(res);
+    });
+    db.close();
+   })
  }
   io.on("connection",function(socket){
     console.log("co nguoi ket noi: " + socket.id);
@@ -341,6 +353,18 @@ app.use(function(req,res,next){
         });
       }
       db.close();
+    });
+   });
+   //Get room Member
+   socket.on("GetRoomMember",function(id){
+    getListFriendOfYourRoom(id,function(list){
+      var arr = [];
+      list.forEach(friend => {
+        var fullname = friend.firstName + " " +friend.lastName 
+        var userInfo = fullname.replace(/\s+/g," ") + " (" + friend.userName + ")";
+        arr.push(userInfo);
+      });
+      socket.emit("returnListFriendOfRoom",arr);
     });
    });
 //user room

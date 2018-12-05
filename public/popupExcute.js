@@ -130,8 +130,8 @@ function register_popup(id, name){
             return;
         }
     }
-    var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head" onclick="hide_popup()"><div class="pop-up-left">'+name+'</div>';
-    var element1 = '<div class="pop-up-right"><div class="room-setup" data-toggle="tooltip" data-placement="top" title="Thành viên">&#9784</div><div data-toggle="tooltip" data-placement="top" title="Đóng" id="close"onclick="close_popup('+id+')">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
+    var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head"><div class="pop-up-left">'+name+'</div>';
+    var element1 = '<div class="pop-up-right"><div class="room-setup" data-toggle="tooltip" data-placement="top" title="Thành viên" onclick="getRoomMember(\''+id+'\')">&#9784</div><div data-toggle="tooltip" data-placement="top" title="Đóng" id="close"onclick="close_popup('+id+')">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
     var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-'+id+'" onclick ="sendMessage(\''+id+'\')">SEND</button></div></div>';
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
     $("#mess").focus();
@@ -144,7 +144,22 @@ function calculate_popups(){
     total_popups = parseInt(width/400);
     display_popups();
 }
-
+function getRoomMember(IDOfRoom){
+    
+    socket.emit("GetRoomMember",IDOfRoom);
+}
+function closeroomlist(){
+    $(".roomMember").hide();
+}
+socket.on("returnListFriendOfRoom",function(listFriendOfRoom){
+    $(".roomMember").show();
+    $(".memberlist").html("");
+    listFriendOfRoom.forEach(friend => {
+        var element = '<div class="member"><img src="/images/avt1.jpg"><span>'+friend+'</span></div>';
+        $(".memberlist").append(element);
+    });
+    $(".room-setup").attr('onclick','closeroomlist()');
+});
 function sendMessage(id){
    var element = "#" + id + " #mess";
     if($(element).val()!=null && $(element).val() !=""){
