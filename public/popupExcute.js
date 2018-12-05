@@ -145,7 +145,6 @@ function calculate_popups(){
     display_popups();
 }
 function getRoomMember(IDOfRoom){
-    
     socket.emit("GetRoomMember",IDOfRoom);
 }
 function closeroomlist(){
@@ -158,7 +157,7 @@ socket.on("returnListFriendOfRoom",function(listFriendOfRoom){
         var element = '<div class="member"><img src="/images/avt1.jpg"><span>'+friend+'</span></div>';
         $(".memberlist").append(element);
     });
-    $(".room-setup").attr('onclick','closeroomlist()');
+    //$(".room-setup").attr('onclick','closeroomlist()');
 });
 function sendMessage(id){
    var element = "#" + id + " #mess";
