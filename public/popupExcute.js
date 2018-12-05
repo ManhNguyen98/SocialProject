@@ -24,6 +24,9 @@ socket.on("room-chat",function(id, newMessage){
     $('.pop-up-mess.' + id).append(element);
     $('[data-toggle="tooltip"]').tooltip();  
 });
+function closeroomlist(){
+    $(".roomMember").hide();
+}
 function roomDefaultChat(id,name){
     var element = document.getElementById(id);
     if (element!=undefined){
@@ -70,24 +73,29 @@ var popups = [];
 
 //function close pop up
 function close_popup(id){
-    if(id.id != undefined)
+    if(id.id != undefined){
     for (var i = 0; i < popups.length; i++){
             if ( id.id == popups[i]){
                 Array.remove(popups,i);
                 document.getElementById(id.id).style.display = "none";
                 calculate_popups();
+                closeroomlist();
                 return;
             }
         }
-    else
+    }
+    else{
     for (var i = 0; i < popups.length; i++){
         if ( id == popups[i]){
             Array.remove(popups,i);
             document.getElementById(id).style.display = "none";
             calculate_popups();
+            closeroomlist();
             return;
         }
     }
+}
+    
 };
 
 function hide_popup(){
@@ -96,6 +104,7 @@ function hide_popup(){
         $(".pop-up-head").attr('id','pop-up-hide');
         $(".pop-up-head").attr('onclick','show_popup()');
         calculate_popups();
+        closeroomlist();
         return;
 }
 function show_popup(){
@@ -147,9 +156,7 @@ function calculate_popups(){
 function getRoomMember(IDOfRoom){
     socket.emit("GetRoomMember",IDOfRoom);
 }
-function closeroomlist(){
-    $(".roomMember").hide();
-}
+
 socket.on("returnListFriendOfRoom",function(listFriendOfRoom){
     $(".roomMember").show();
     $(".memberlist").html("");
