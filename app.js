@@ -441,7 +441,10 @@ socket.on('friend-chatting',function(userto,mess,userfrom){
       db.close();
       });
    });
-   
+   //public status
+   socket.on("publicStatus",function(element,fullname){
+    socket.broadcast.emit("somePublicStatus",element,fullname);
+   });
    //them ban
    socket.on('addfriend',function(data){
      if (data != socket.user.userName){

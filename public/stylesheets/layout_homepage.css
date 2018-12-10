@@ -425,3 +425,8 @@ body{
     border-radius: 50%;
     padding: 3px;
 }
+/* Notice */
+.subnotice{
+    margin-bottom: 5px;
+    padding: 3px;
+}

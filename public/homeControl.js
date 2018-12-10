@@ -196,8 +196,8 @@ socket.on('your-status',function(status){
     for (i=1;i<status.length;i++){
         var time = status[i].time;
         var text = status[i].text;
-        var element = '<div class="newPost"><div class="userCard"><img src="/images/avt1.jpg"><div class="newFeedFullName"><span>'+status[i].fullname+'</span>';
-        var element = element + '<div class="dropdown"><button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button><ul class="dropdown-menu"><li id ="\''+i+'\'" onclick="statusHide(\''+user.userName+i+'\','+i+')">Ẩn <i class="glyphicon glyphicon-eye-close"></i></li><li>Chia sẻ <i class="glyphicon glyphicon-share"></i></li></ul></div></div>';
+        var element = '<div class="newPost" id ="newPost'+i+'"><div class="userCard"><img src="/images/avt1.jpg"><div class="newFeedFullName"><span>'+status[i].fullname+'</span>';
+        var element = element + '<div class="dropdown"><button data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></button><ul class="dropdown-menu"><li id ="\''+i+'\'" onclick="statusHide(\''+user.userName+i+'\','+i+')">Ẩn <i class="glyphicon glyphicon-eye-close"></i></li><li onclick="publicStatus(\''+"newPost"+i+'\')">Chia sẻ <i class="glyphicon glyphicon-share"></i></li></ul></div></div>';
         var element = element + '<span class="timer">'+time+'</span></div><div class="userText"><br><p id ="\''+user.userName+i+'\'">'+text+'</p></div></div>';
         if (time != "")
         $(".newFeed").prepend(element);
@@ -216,6 +216,18 @@ function statusHide(id,i){
         btn.innerHTML = 'Ẩn <i class="glyphicon glyphicon-eye-close"></i>';
     }
 }
+function publicStatus(id){
+    var post = document.getElementById(id);
+    var element = '<div class="newPost">'+post.innerHTML+"</div>";
+    var fullname = user.firstName + " " + user.lastName;
+    socket.emit("publicStatus",element,fullname);
+}
+socket.on("somePublicStatus",function(element,fullname){
+    var notify = '<div class="subnotice"><marquee>'+ fullname +" vừa thêm cảm nghĩ mới!"+'</marquee></div>';
+    $(".notice").append(notify);
+    setTimeout(function(){$(".notice").html("")},10000);
+    $(".newFeed").prepend(element);
+});
 function getCurrentTime(){
     var d = new Date();
     var day = d.getDate();
