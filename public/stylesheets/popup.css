@@ -30,7 +30,18 @@
       flex-direction: row;
       cursor: pointer;
   }
-  
+.room-leave{
+    padding-right: 5px; 
+    text-align: center;
+    font-size: 20px;
+    opacity: 0.5;
+}
+.room-leave[title]{
+    width: 40px;
+}
+.room-leave:hover{
+    opacity: 1;
+}
 .room-setup{
     padding-right: 5px; 
     text-align: center;

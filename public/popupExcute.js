@@ -140,7 +140,7 @@ function register_popup(id, name){
         }
     }
     var element = '<div class="pop-up-box" id = "' + id + '"><div class="pop-up-head"><div class="pop-up-left">'+name+'</div>';
-    var element1 = '<div class="pop-up-right"><div class="room-setup" data-toggle="tooltip" data-placement="top" title="Thành viên" onclick="getRoomMember(\''+id+'\')">&#9784</div><div data-toggle="tooltip" data-placement="top" title="Đóng" id="close"onclick="close_popup('+id+')">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
+    var element1 = '<div class="pop-up-right"><div class="room-leave" data-toggle="tooltip" data-placement="top" title="Rời khỏi phòng" onclick="leaveRoom(\''+id+'\')">&#9760</div><div class="room-setup" data-toggle="tooltip" data-placement="top" title="Thành viên" onclick="getRoomMember(\''+id+'\')">&#9784</div><div data-toggle="tooltip" data-placement="top" title="Đóng" id="close"onclick="close_popup('+id+')">&#10005</div></div></div><div class="pop-up-mess '+id+'"></div><div class="pop-up-footer">';
     var element2 ='<input name="message" id="mess" placeholder="Nhập tin nhắn..."><button class="btnSend btnSend-'+id+'" onclick ="sendMessage(\''+id+'\')">SEND</button></div></div>';
     document.getElementById("middle").innerHTML = document.getElementById("middle").innerHTML + element + element1 + element2;      
     $("#mess").focus();
