@@ -156,7 +156,12 @@ function calculate_popups(){
 function getRoomMember(IDOfRoom){
     socket.emit("GetRoomMember",IDOfRoom);
 }
-
+function leaveRoom(roomID){
+    var select = confirm("Bạn có chắc muốn rời khỏi phòng?");
+    if (select == true){
+        socket.emit("leaveRoom",roomID,user.userName);
+    }
+}
 socket.on("returnListFriendOfRoom",function(listFriendOfRoom){
     $(".roomMember").show();
     $(".memberlist").html("");

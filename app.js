@@ -181,7 +181,6 @@ app.use(function(req,res,next){
        });
      }
    });
-  
   //Handle Login
   app.post('/login',
     passport.authenticate('local', {failureRedirect: '/', failureFlash: 'Tài khoản hoặc mật khẩu không đúng'}),
@@ -355,6 +354,19 @@ app.use(function(req,res,next){
       db.close();
     });
    });
+   //LeaveRoom
+    socket.on("leaveRoom",function(roomId,username){
+      console.log(roomId);
+      console.log(username);
+      MongoClient.connect(url,function(err,db){
+        if (err) throw err;
+        var dbo = db.db("social");
+        dbo.collection("users").updateOne({userName:username},{$pull: {room:{$elemMatch:{roomID:roomId}}}},function(err){
+          if (err) throw err;
+        });
+        db.close();
+      });
+    });
    //Get room Member
    socket.on("GetRoomMember",function(id){
     getListFriendOfYourRoom(id,function(list){
