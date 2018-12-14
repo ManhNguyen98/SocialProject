@@ -361,8 +361,12 @@ app.use(function(req,res,next){
       MongoClient.connect(url,function(err,db){
         if (err) throw err;
         var dbo = db.db("social");
-        dbo.collection("users").updateOne({userName:username},{$pull: {room:{$elemMatch:{roomID:roomId}}}},function(err){
+        dbo.collection("users").updateOne({userName:username},{$pull: {room:{roomID:roomId}}},function(err){
           if (err) throw err;
+        });
+        dbo.collection("users").findOne({userName:username},function(err,res){
+          if (err) throw err;
+          socket.emit("your-room",res.room);
         });
         db.close();
       });
