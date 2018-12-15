@@ -160,6 +160,7 @@ function leaveRoom(roomID){
     var select = confirm("Bạn có chắc muốn rời khỏi phòng?");
     if (select == true){
         socket.emit("leaveRoom",roomID,user.userName);
+        close_popup(roomID);
     }
 }
 socket.on("returnListFriendOfRoom",function(listFriendOfRoom){
